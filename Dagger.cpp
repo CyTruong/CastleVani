@@ -1,0 +1,50 @@
+#include "Dagger.h"
+
+
+
+Dagger::Dagger()
+{
+	this->atk_able = false;
+	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
+	LPANIMATION_SET ani_set = animation_sets->Get(7);
+	this->SetAnimationSet(ani_set);
+	this->vy = 0;
+	this->vx = 0;
+	this->x = 0;
+	this->y = 0;
+}
+
+void Dagger::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
+{
+	CGameObject::Update(dt);
+
+	vector<LPCOLLISIONEVENT> coEvents;
+	coEvents.clear();
+
+	// turn off collision when die 
+	CalcPotentialCollisions(coObjects, coEvents);
+	if (coEvents.size() == 0)
+	{
+		x += dx;
+		y += dy;
+	}
+
+}
+
+void Dagger::GetBoundingBox(float & left, float & top, float & right, float & bottom)
+{
+}
+
+void Dagger::Render()
+{
+	int ani = DAGGER_ANI_FLY_LEFT;
+	if (vx>0) {
+		ani = DAGGER_ANI_FLY_RIGHT;
+	}
+	animation_set->at(ani)->Render(x, y);
+}
+
+
+Dagger::~Dagger()
+{
+}
