@@ -276,9 +276,12 @@ void CPlayScene::Update(DWORD dt)
 
 	for (int i = 0; i < objects.size(); i++)
 	{
-		objects[i]->Update(dt, &coObjects);
+		if (!dynamic_cast<CSimon *>(objects[i])) {
+			objects[i]->Update(dt, &coObjects);
+		}
+		
 	}
-	//player->Update(dt, &coObjects);
+	player->Update(dt, &coObjects);
 
 	EnemySpawn::getInstance()->Update(dt, &coObjects);
 

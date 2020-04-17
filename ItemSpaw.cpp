@@ -31,6 +31,12 @@ LPGAMEOBJECT ItemSpaw::CreateObj(int x, int y)
 		Grid::GetInstance()->Insert(update);
 		return update;
 	}
+	if (r==ITEM_SUB_WEAPON_1) {
+		DaggerPicker* daggerpk = new DaggerPicker();
+		daggerpk->SetPosition(x,y+5);
+		Grid::GetInstance()->Insert(daggerpk);
+		return daggerpk;
+	}
 	return NULL;
 
 

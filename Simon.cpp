@@ -112,7 +112,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 	subweapon->Update(dt,coObjects);
 
-	if (status == SIMON_STA_STANDUP) {
+	if (status == SIMON_STA_STANDUP && state!=SIMON_STATE_CLIMP) {
 		DebugOut(L"Stand up \n");
 		y = y - (SIMON_BIG_BBOX_HEIGHT - 0.8*SIMON_SMALL_BBOX_HEIGHT) -10; //0.8 là giảm số khi đứng dậy ko bị rớt khỏi map 
 		status = SIMON_STA_NOR;
@@ -348,6 +348,17 @@ void CSimon::Render()
 			else ani = SIMON_ANI_IDLE_LEFT;
 		}
 			
+		}
+		if (status == SIMON_STA_ATK) {
+			if (vx == 0)
+			{
+				if (nx > 0)
+					ani = SIMON_ANI_WHIP_SUB_RIGHT;
+				else ani = SIMON_ANI_WHIP_SUB_LEFT;
+			}
+			else if (vx > 0)
+				ani = SIMON_ANI_WHIP_SUB_RIGHT;
+			else ani = SIMON_ANI_WHIP_SUB_LEFT;
 		}
 	}
 	
