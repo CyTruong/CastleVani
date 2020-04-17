@@ -10,6 +10,7 @@
 #include "EnemySpawn.h"
 #include "Lamp.h"
 #include "Heart.h"
+#include "Stairs.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath):
@@ -37,6 +38,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define OBJECT_TYPE_KOOPAS	3
 #define OBJECT_TYPE_HEART	4
 #define OBJECT_TYPE_WHIP_UPDATE 5
+#define OBJECT_TYPE_STAIRS	6
 #define OBJECT_TYPE_PORTAL	50
 
 #define MAX_SCENE_LINE 1024
@@ -176,6 +178,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
 	case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
 	case OBJECT_TYPE_HEART: obj = new Heart(); break;
+	case OBJECT_TYPE_STAIRS: {
+			float r = atof(tokens[4].c_str());
+			float b = atof(tokens[5].c_str());
+			int t = atof(tokens[6].c_str());
+			obj = new Stairs(x, y, r, b,t);
+			break;
+		}
 	case OBJECT_TYPE_PORTAL:
 		{	
 			float r = atof(tokens[4].c_str());
@@ -265,11 +274,11 @@ void CPlayScene::Update(DWORD dt)
 		coObjects.push_back(objects[i]);
 	}
 
-	for (int i = 1; i < objects.size(); i++)
+	for (int i = 0; i < objects.size(); i++)
 	{
 		objects[i]->Update(dt, &coObjects);
 	}
-	player->Update(dt, &coObjects);
+	//player->Update(dt, &coObjects);
 
 	EnemySpawn::getInstance()->Update(dt, &coObjects);
 
@@ -359,7 +368,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	else if (game->IsKeyDown(DIK_DOWN))
 		simon->SetState(SIMON_STATE_DUCK);
 	else if (game->IsKeyDown(DIK_UP))
-		simon->SetState(SIMON_STATE_CLIMPUP);
+		simon->SetState(SIMON_STATE_CLIMP);
 	else
 		simon->SetState(SIMON_STATE_IDLE);
 }

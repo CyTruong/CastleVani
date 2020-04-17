@@ -99,6 +99,9 @@
     <ClCompile Include="Dagger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Stairs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Brick.h">
@@ -183,6 +186,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Dagger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Stairs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

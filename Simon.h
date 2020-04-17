@@ -3,7 +3,8 @@
 #include "Textures.h"
 #include "Whip.h"
 #include "SubWeapon.h"
-
+#include "Stairs.h"
+ 
 #define SIMON_WALKING_SPEED		0.1f 
 
 #define SIMON_JUMP_SPEED_Y		0.5f
@@ -17,8 +18,8 @@
 #define SIMON_STATE_JUMP			300
 #define SIMON_STATE_DIE				400
 #define SIMON_STATE_DUCK			500
-#define SIMON_STATE_CLIMPUP			600
-
+#define SIMON_STATE_CLIMP		600
+#define SIMON_STATE_CLIMPDOWN		700
 
 #define SIMON_ANI_IDLE_LEFT		0
 #define SIMON_ANI_IDLE_RIGHT			1
@@ -68,13 +69,17 @@ class CSimon : public CGameObject
 	int isJump;
 	Whip* whip;
 	SubWeapon* subweapon;
+	Stairs* cauthang;
+	bool isCauthang;
 public:
 	CSimon() : CGameObject()
 	{
 		status = SIMON_STA_NOR;
 		onAir = 0;
 		isJump = 0;
+		cauthang = NULL;
 		untouchable = 0;
+		isCauthang = false;
 		whip = new Whip();
 		atk_able = false;
 		subweapon = new SubWeapon();

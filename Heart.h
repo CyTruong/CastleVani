@@ -1,10 +1,10 @@
 #pragma once
-#include "GameObject.h"
+#include "Item.h"
 #define BBOX_HEART_WIDTH 16
 #define BBOX_HEART_HEIGHT 16
 #define HEART_ANI_IDLE 0
 class Heart :
-	public CGameObject
+	public Item
 {
 public:
 	Heart();

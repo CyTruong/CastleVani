@@ -1,5 +1,11 @@
 #include "Brick.h"
 
+CBrick::CBrick()
+{
+	collision_able = true;
+	atk_able = false;
+}
+
 void CBrick::Render()
 {
 	animation_set->at(0)->Render(x, y);

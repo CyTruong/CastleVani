@@ -56,6 +56,7 @@ public:
 	float vx;
 	float vy;
 	bool atk_able;
+	bool collision_able;
 	int nx;	 
 
 	int state;

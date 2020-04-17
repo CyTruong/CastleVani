@@ -4,7 +4,7 @@
 
 Lamp::Lamp()
 {
-
+	this->collision_able = false;
 
 }
 

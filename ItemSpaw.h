@@ -1,11 +1,15 @@
 #pragma once
 #include <Windows.h>
+#include <time.h>
+#include <stdlib.h>
 #include "Heart.h"
 #include "Grid.h"
-#include	"WhipUpdate.h"
-#define ITEM_HEART_ID 1
-#define ITEM_WHIP_UPDATE 2
-#define ITEM_SUB_WEAPON_1 3
+#include "WhipUpdate.h"
+#include "Utils.h"
+#define ITEM_HEART 0
+#define ITEM_WHIP_UPDATE 1
+#define ITEM_SUB_WEAPON_1 2
+#define ITEM_COUNT 2 //sub wea chua có
 
 class ItemSpaw
 {

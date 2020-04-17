@@ -138,6 +138,7 @@
     <ClCompile Include="Lamp.cpp" />
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="Simon.cpp" />
+    <ClCompile Include="Stairs.cpp" />
     <ClCompile Include="SubWeapon.cpp" />
     <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="Utils.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="Lamp.h" />
     <ClInclude Include="Portal.h" />
     <ClInclude Include="Simon.h" />
+    <ClInclude Include="Stairs.h" />
     <ClInclude Include="SubWeapon.h" />
     <ClInclude Include="TileMap.h" />
     <ClInclude Include="Utils.h" />

@@ -14,6 +14,7 @@ CGameObject::CGameObject()
 	vx = vy = 0;
 	nx = 1;	
 	atk_able = true;
+	collision_able = true;
 }
 
 void CGameObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
@@ -73,8 +74,12 @@ void CGameObject::CalcPotentialCollisions(
 		if (coObjects->at(i)->GetState()!=OBJ_DIE) {
 			LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
 
-			if (e->t > 0 && e->t <= 1.0f)
+			if (e->t > 0 && e->t <= 1.0f) {
+				if (!coObjects->at(i)->collision_able) {
+					e->t = 1.1f;
+				}
 				coEvents.push_back(e);
+			}
 			else
 				delete e;
 		}
@@ -111,10 +116,14 @@ void CGameObject::FilterCollision(
 		if (c->t < min_ty  && c->ny != 0) {
 			min_ty = c->t; ny = c->ny; min_iy = i; rdy = c->dy;
 		}
+		if (!c->obj->collision_able) {
+			coEventsResult.push_back(c);
+		}
 	}
 
 	if (min_ix>=0) coEventsResult.push_back(coEvents[min_ix]);
 	if (min_iy>=0) coEventsResult.push_back(coEvents[min_iy]);
+	
 }
 
 
