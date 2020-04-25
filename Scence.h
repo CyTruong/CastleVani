@@ -9,7 +9,7 @@ protected:
 	CKeyEventHandler * key_handler;
 	int id;
 	LPCWSTR sceneFilePath;
-
+	float gametime;
 public: 
 	CScene(int id, LPCWSTR filePath);
 

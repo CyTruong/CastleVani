@@ -9,6 +9,7 @@
 #include "Koopas.h"
 #include "TileMap.h"
 #include "Simon.h"
+#include "UI.h"
 
 class CPlayScene: public CScene
 {
@@ -16,7 +17,7 @@ protected:
 	CSimon *player;					// A play scene has to have player, right? 
 	TileMap *map;
 	vector<LPGAMEOBJECT> objects;
-
+	UI* ui;
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_Map(string line);
 	void _ParseSection_SPRITES(string line);

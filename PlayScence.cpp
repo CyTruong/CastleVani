@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <fstream>
 
 #include "PlayScence.h"
@@ -211,7 +211,7 @@ void CPlayScene::Load()
 {
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
-	
+	gametime = 0;
 	Grid::GetInstance();
 	EnemySpawn::getInstance();
 
@@ -252,6 +252,9 @@ void CPlayScene::Load()
 			case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
 		}
 	}
+	//Khởi tạo Ui
+	ui = new UI(10, 10, 3, 1);
+	ui->Initialize();
 	map->LoadTileSet();
 	Grid::GetInstance()->Push(objects);
 	f.close();
@@ -265,7 +268,11 @@ void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
-
+	gametime += dt;
+	if (gametime >= 1000)
+	{
+		ui->Update(300 - (int)gametime / 1000,10, 10, 3, 1);
+	}
 	vector<LPGAMEOBJECT> objects = Grid::GetInstance()->Get();
 
 	vector<LPGAMEOBJECT> coObjects;
@@ -304,10 +311,13 @@ void CPlayScene::Update(DWORD dt)
 void CPlayScene::Render()
 {
 	map->Render();
-	player->Render();
+	
 	vector<LPGAMEOBJECT> objects = Grid::GetInstance()->Get();
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
+	player->Render();
+	ui->Render();
+
 }
 
 /*

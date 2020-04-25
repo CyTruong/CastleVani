@@ -58,11 +58,23 @@ void TileMap::LoadTileSet() {
 
 void TileMap::Render() {
 	CSprites * sprites = CSprites::GetInstance();
-	//float camposX;
-	//float camposY;
-	//CGame::GetInstance()->GetCamPos(camposX,camposY);
-	//for (int i = floor(camposY); i < floor(camposY + SCREEN_HEIGHT) - 1; i++) {
-	//	for (int j = floor(camposX); j < floor(camposX + SCREEN_WIDTH) - 1; j++) {
+	float camposX;
+	float camposY;
+	CGame::GetInstance()->GetCamPos(camposX,camposY);
+	camposX = camposX / 16;
+	camposY = camposY / 16;
+	float camposX2 = camposX + (SCREEN_WIDTH / 16);
+	float camposY2 = camposY + (SCREEN_HEIGHT / 16);
+	if (camposX  < 0) {
+		camposX = 0;
+	}
+	if (camposY < 0) {
+		camposY = 0;
+	}
+	
+	DebugOut(L"campos lt(%f,%f) rb(%f,%f) \n", ceil(camposX), ceil(camposY), ceil(camposX2) - 1, ceil(camposY2) - 1);
+	//for (int i = ceil(camposY); i < ceil(camposY2) - 1; i++) {
+	//	for (int j = ceil(camposX); j < ceil(camposX2) - 1; j++) {
 	for (int i = 0; i < mapRow-1; i++) {
 		for (int j = 0; j < mapCollum-1; j++){
 			sprites->Get(TEXTTURE_START + mapMatrix[i][j])->Draw(j * 16, i * 16);

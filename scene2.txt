@@ -5,6 +5,7 @@
 40	textures\titleset2a.png	225	225	225
 60	textures\obj.png	116	116	116
 80	textures\enemy.png	116	116	116
+100	textures\UI.png	255	0	255
 [BACKGROUND]
 #texture_id map_width map_height map_file titleset_width titleset_height 
 40	16	12	textures\titleset2a_bg.txt	16	2
@@ -101,6 +102,17 @@
 47002	354	480	369	488	0	0	0
 #==================BRICK SPRITES===============================
 20001	408	225	424	241	0	0	20
+#==============================================UI=======================================
+#============UI HEART===================
+3000	0	17	8	25	0	0	100
+#============SIMON HP===================
+3001	12	19	15	25	0	0	100
+#============ENEMY HP==================
+3002	19	19	22	25	0	0	100
+#============ENEMY HP==================
+3003	26	19	29	25	0	0	100
+#============ITEM SQUARE===============
+3004	33	19	65	41	0	0	100
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 # ==== SIMON =========
