@@ -6,18 +6,21 @@
 //26 13
 #define SPRITE_ID_START 41000
 
-#define WHIP_BBOX_WIDTH_SHORT 30
+#define WHIP_BBOX_WIDTH_SHORT 35
 #define WHIP_BBOX_HEIGHT 8
 #define WHIP_BBOX_WIDTH_LONG 45
 
 #define WHIP_LEVEL_0 0
 #define WHIP_LEVEL_1 1
-#define WHIP_LEVEL_MAX 1
+#define WHIP_LEVEL_2 2
+#define WHIP_LEVEL_MAX 2
 
 #define WHIP_ANI_0_LEFT 0
 #define WHIP_ANI_0_RIGHT 1
 #define WHIP_ANI_1_LEFT 2
 #define WHIP_ANI_1_RIGHT 3
+#define WHIP_ANI_2_LEFT 4
+#define WHIP_ANI_2_RIGHT 5
 
 #define WHIP_DIR_LEFT 0
 #define WHIP_DIR_RIGHT 1	
@@ -32,6 +35,7 @@ private:
 	int Direction;
 	int dir;
 	int level;
+	bool effted;
 public:
 	Whip();
 	void atk(int dir);

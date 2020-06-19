@@ -33,6 +33,10 @@ void Dagger::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 void Dagger::GetBoundingBox(float & left, float & top, float & right, float & bottom)
 {
+	left = x;
+	top = y;
+	right = x + BBOX_DAGGER_WIDTH;
+	bottom = y + BBOX_DAGGER_HEIGHT;
 }
 
 void Dagger::Render()

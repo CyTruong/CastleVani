@@ -4,6 +4,8 @@
 
 Item::Item()
 {
+	atk_able = false;
+
 }
 
 

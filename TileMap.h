@@ -8,11 +8,12 @@
 
 #define MAP_TILE_WIDTH 16
 #define MAP_TITE_HEIGHT 16
-#define TEXTTURE_START 99000
+#define TEXTTURE_START 1000
 class TileMap
 {
 private :
-	int** mapMatrix;
+	//int** mapMatrix;
+	unordered_map<int, int> mapMat;
 	int mapRow;
 	int mapCollum;
 	string mapFile;
@@ -25,6 +26,7 @@ public:
 	void LoadTileSet();
 	void Update();
 	void Render();
+	void Unload();
 	~TileMap();
 };
 

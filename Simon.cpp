@@ -9,7 +9,10 @@
 #include "WhipUpdate.h"
 #include "Item.h"
 #include "Portal.h"
-
+#include "HolyPicker.h"
+#include "AxePicker.h"
+#include "BoomerangPicker.h"
+#include "EnemySpawn.h"
 
 void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
@@ -38,44 +41,22 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		untouchable = 0;
 	}
 
-
+	#pragma region Simon duck
 	if (state == SIMON_STATE_DUCK && cauthang != NULL) {
 		this->state = SIMON_STATE_CLIMP;
 	}
 
+	#pragma endregion
 
+	#pragma region Simon climp 
 
 	if (cauthang != NULL) {
 		if (cauthang->type == STAIRS_L2R) { // trái lên phải
-			if (state != SIMON_STATE_CLIMP) {  
-				if (((x > cauthang->x + STAIRS_BBOX_WIDTH  ) || (x+ SIMON_BIG_BBOX_WIDTH < cauthang->x))  && y > cauthang->y  ) { //ra khỏi chân cầu
+			if (state != SIMON_STATE_CLIMP) {
+				if (((x > cauthang->x + STAIRS_BBOX_WIDTH) || (x + SIMON_BIG_BBOX_WIDTH < cauthang->x)) && y > cauthang->y) { //ra khỏi chân cầu
 					cauthang = NULL;
 					vy = 0;
 					DebugOut(L"Ra khỏi cầu thang 1\n");
-				}
-				 
-			}
-			else
-			{	//ra khỏi cầu thang
-				if (y + SIMON_BIG_BBOX_HEIGHT < cauthang->y ) {
-					cauthang = NULL;
-					vy = 0;
-					DebugOut(L"Ra khỏi cầu thang 2\n");
-
-				}else
-				if (y+ SIMON_BIG_BBOX_HEIGHT > cauthang->y + cauthang->height) {
-					cauthang = NULL;
-					vy = 0;
-					DebugOut(L"Ra khỏi cầu thang 2\n");
-				}
-			}
-		}else
-		if (cauthang->type == STAIRS_R2L) {
-			if (state != SIMON_STATE_CLIMP) {
-				if (((x > (cauthang->x + cauthang->width+STAIRS_BBOX_WIDTH) ) || (x+ SIMON_BIG_BBOX_WIDTH  < (cauthang->x + cauthang->width))) && y > cauthang->y) { //ra khỏi chân cầu
-					cauthang = NULL;
-					vy = 0;
-					DebugOut(L"Ra khỏi cầu thang 11\n");
 				}
 
 			}
@@ -84,41 +65,85 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				if (y + SIMON_BIG_BBOX_HEIGHT < cauthang->y) {
 					cauthang = NULL;
 					vy = 0;
-					DebugOut(L"Ra khỏi cầu thang 21\n");
+					DebugOut(L"Ra khỏi cầu thang 2\n");
 
 				}
 				else
 					if (y + SIMON_BIG_BBOX_HEIGHT > cauthang->y + cauthang->height) {
 						cauthang = NULL;
 						vy = 0;
-						DebugOut(L"Ra khỏi cầu thang 21\n");
+						DebugOut(L"Ra khỏi cầu thang 2\n");
 					}
 			}
 		}
+		else
+			if (cauthang->type == STAIRS_R2L) {
+				if (state != SIMON_STATE_CLIMP) {
+					if (((x > (cauthang->x + cauthang->width + STAIRS_BBOX_WIDTH)) || (x + SIMON_BIG_BBOX_WIDTH < (cauthang->x + cauthang->width))) && y > cauthang->y) { //ra khỏi chân cầu
+						cauthang = NULL;
+						vy = 0;
+						DebugOut(L"Ra khỏi cầu thang 11\n");
+					}
+
+				}
+				else
+				{	//ra khỏi cầu thang
+					if (y + SIMON_BIG_BBOX_HEIGHT < cauthang->y) {
+						cauthang = NULL;
+						vy = 0;
+						DebugOut(L"Ra khỏi cầu thang 21\n");
+
+					}
+					else
+						if (y + SIMON_BIG_BBOX_HEIGHT > cauthang->y + cauthang->height) {
+							cauthang = NULL;
+							vy = 0;
+							DebugOut(L"Ra khỏi cầu thang 21\n");
+						}
+				}
+			}
 	}
-	if (state == SIMON_STATE_CLIMP && cauthang!=NULL) {
+	if (state == SIMON_STATE_CLIMP && cauthang != NULL) {
+		float l, t, r, b;
+		GetBoundingBox(l, t, r, b);
+		cauthang->SetSimonPos(this->x, this->y, (r - l), (b - t));
 
 		float fx, fy;
 		cauthang->GetStaireVector(vy, fx, fy);
-		DebugOut(L"simon stte %d v %f fx %f fy %f \n", state, this->vy,fx,fy);
+		DebugOut(L"simon stte %d v %f fx %f fy %f \n", state, this->vy, fx, fy);
 
-		this->dx = fx*dt;
-		this->dy = fy*dt;
+		this->dx = fx * dt;
+		this->dy = fy * dt;
+
 	}
 
+	#pragma endregion
 
-	if (status == SIMON_STA_ATK) {	
+	#pragma region Simon atk
+	if (status == SIMON_STA_ATK) {
 		whip->Update(dt, coObjects);
 	}
-	subweapon->Update(dt,coObjects);
+	subweapon->Update(dt, coObjects);
+	float subX = 0;
+	subweapon->GetWeapponX(subX);
+	LPGAMEOBJECT subwb; subweapon->GetWeapon(subwb);
+	if (abs(subX - this->x) >= SCREEN_WIDTH / 2 || subwb->vx == 0) {
+		subweapon->isready = true;
+	}
 
-	if (status == SIMON_STA_STANDUP && state!=SIMON_STATE_CLIMP) {
+
+#pragma endregion
+
+	#pragma region Simon đứng dậy
+	if (status == SIMON_STA_STANDUP && state != SIMON_STATE_CLIMP) {
 		DebugOut(L"Stand up \n");
-		y = y - (SIMON_BIG_BBOX_HEIGHT - 0.8*SIMON_SMALL_BBOX_HEIGHT) -10; //0.8 là giảm số khi đứng dậy ko bị rớt khỏi map 
+		y = y - (SIMON_BIG_BBOX_HEIGHT - 0.8*SIMON_SMALL_BBOX_HEIGHT) - 10; //0.8 là giảm số khi đứng dậy ko bị rớt khỏi map 
 		status = SIMON_STA_NOR;
 	}
 
-	// No collision occured, proceed normally
+	#pragma endregion
+
+	#pragma region Simon va chạm obj tĩnh
 	if (coEvents.size() == 0)
 	{
 		onAir = 1;
@@ -146,53 +171,92 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-	
+
 
 			if (dynamic_cast<Item *>(e->obj)) {
 				e->obj->state = OBJ_DIE;
 				if (dynamic_cast<WhipUpdate *>(e->obj)) {
 					this->whip->Update();
 				}
-			}else
-			if (dynamic_cast<Stairs *>(e->obj)) // if e->obj is Goomba 
-			{
-				Stairs* stairs = dynamic_cast<Stairs*>(e->obj);
-				DebugOut(L"Tren cau thang \n");
-				
-				if (stairs->type == STAIRS_L2R) {
-					if (this->y > stairs->y && e->nx < 0) {
-						DebugOut(L"Duung huong \n");
-						this->cauthang = stairs;
-					}
-					if (this->y < stairs->y && e->nx > 0) {
-						DebugOut(L"Duung huong \n");
-						this->cauthang = stairs;
-					}
+				if (dynamic_cast<HolyPicker *>(e->obj)) {
+					this->subweapon->SetWeaponType(SUB_WEAPON_HOLY);
 				}
-				if (stairs->type == STAIRS_R2L) {
-					if (this->y > stairs->y && e->nx > 0) {
-						DebugOut(L"Duung huong \n");
-						this->cauthang = stairs;
-					}
-					if (this->y < stairs->y && e->ny < 0) {
-						DebugOut(L"Duung huong \n");
-						this->cauthang = stairs;
-					}
+				if (dynamic_cast<AxePicker *>(e->obj)) {
+					this->subweapon->SetWeaponType(SUB_WEAPON_AXE);
 				}
+				if (dynamic_cast<BoomerangPicker*>(e->obj)) {
+					this->subweapon->SetWeaponType(SUB_WEAPON_BOMERANG);
+				}
+
 			}
-			else if (dynamic_cast<CPortal *>(e->obj))
-			{
-				CPortal *p = dynamic_cast<CPortal *>(e->obj);
-				DebugOut(L"[INFO] Switching to scene %d", p->GetSceneId());
-				CGame::GetInstance()->SwitchScene(p->GetSceneId());
+			else
+				if (dynamic_cast<Stairs *>(e->obj)) // if e->obj is Goomba 
+				{
+					Stairs* stairs = dynamic_cast<Stairs*>(e->obj);
+					DebugOut(L"Tren cau thang \n");
+
+					if (stairs->type == STAIRS_L2R) {
+						if (this->y > stairs->y && e->nx < 0) {
+							DebugOut(L"Duung huong \n");
+							this->cauthang = stairs;
+						}
+						if (this->y < stairs->y && e->nx > 0) {
+							DebugOut(L"Duung huong \n");
+							this->cauthang = stairs;
+						}
+					}
+					if (stairs->type == STAIRS_R2L) {
+						if (this->y > stairs->y && e->nx > 0) {
+							DebugOut(L"Duung huong \n");
+							this->cauthang = stairs;
+						}
+						if (this->y < stairs->y && e->ny < 0) {
+							DebugOut(L"Duung huong \n");
+							this->cauthang = stairs;
+						}
+					}
+				}
+				else if (dynamic_cast<CPortal *>(e->obj))
+				{
+					CPortal *p = dynamic_cast<CPortal *>(e->obj);
+					DebugOut(L"[INFO] Switching to scene %d", p->GetSceneId());
+					PlayerStatus::getInstance()->SetStateIndex(p->GetSceneId());
+					CGame::GetInstance()->SwitchScene(p->GetSceneId());
+				}
+		}
+	}
+#pragma endregion
+	
+	#pragma region Va chạm enemy
+	if (untouchable == 0) {
+		float wl, wt, wr, wb;
+		this->GetBoundingBox(wl, wt, wr, wb);
+		vector<LPGAMEOBJECT>* enemy = EnemySpawn::getInstance()->getEnemlist();
+		for (UINT i = 0; i < enemy->size(); i++) {
+			if (enemy->at(i)->state != OBJ_DIE) {
+				float l, t, r, b;
+				enemy->at(i)->GetBoundingBox(l, t, r, b);
+				if (l > wl && l < wr) {
+					if (!(b < wt || t > wb)) {
+						StartUntouchable();
+						vy = -SIMON_JUMP_SPEED_Y;
+						PlayerStatus::getInstance()->SubHp(1);
+					}
+				}
 			}
 		}
 	}
+#pragma endregion
+
+	// No collision occured, proceed normally
+	
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+
 }
 
 void CSimon::atk() {
+	DebugOut(L"x %f y %f \n",x,y);
 	if (vx==0) {
 		if (nx > 0) {
 			whip->atk(WHIP_DIR_RIGHT);
@@ -330,23 +394,23 @@ void CSimon::Render()
 			else ani = SIMON_ANI_CLIMB_UP_LEFT;
 		}
 		else {
-		if (vy > 0) {
-			if (vx == 0)
-			{
-				if (nx > 0)
+			if (vy > 0) {
+				if (vx == 0)
+				{
+					if (nx > 0)
+						ani = SIMON_ANI_CLIMB_DOWN_RIGHT;
+					else ani = SIMON_ANI_CLIMB_DOWN_LEFT;
+				}
+				else if (vx > 0)
 					ani = SIMON_ANI_CLIMB_DOWN_RIGHT;
 				else ani = SIMON_ANI_CLIMB_DOWN_LEFT;
 			}
-			else if (vx > 0)
-				ani = SIMON_ANI_CLIMB_DOWN_RIGHT;
-			else ani = SIMON_ANI_CLIMB_DOWN_LEFT;
-		}
-		else
-		{
-			if (nx > 0)
-				ani = SIMON_ANI_IDLE_RIGHT;
-			else ani = SIMON_ANI_IDLE_LEFT;
-		}
+			else
+			{
+				if (nx > 0)
+					ani = SIMON_ANI_CLIMP_STAND_RIGHT;
+				else ani = SIMON_ANI_CLIMP_STAND_LEFT;
+			}
 			
 		}
 		if (status == SIMON_STA_ATK) {
@@ -363,13 +427,29 @@ void CSimon::Render()
 	}
 	
 	int alpha = 255;
-	if (untouchable) alpha = 128;
+	if (untouchable) {
+		if (vx == 0)
+		{
+			if (nx > 0)
+				ani = SIMON_ANI_DAMAGED_RIGHT;
+			else ani = SIMON_ANI_DAMAGED_LEFT;
+		}
+		else if (vx > 0)
+			ani = SIMON_ANI_DAMAGED_RIGHT;
+		else ani = SIMON_ANI_DAMAGED_LEFT;
+	}
+
 	whip->x = x;
 	whip->y = y;
 
 	whip->Render();
 	subweapon->Render();
-	bool islastF = animation_set->at(ani)->Render(x, y, alpha);
+	bool islastF = false;
+	if (untouchable==1 && (GetTickCount() - untouchable_start)%2 == 0) {
+		//Ko render
+	}else
+	islastF = animation_set->at(ani)->Render(x, y, alpha);
+
 	if (islastF && status == SIMON_STA_ATK) {
 		status = SIMON_STA_NOR;
 	}
@@ -397,10 +477,13 @@ void CSimon::SetState(int state)
 	case SIMON_STATE_CLIMP:
 		if (this->cauthang != NULL) {
 			vy = -0.02f;
-		}		
+		}
+		else {
+			state = SIMON_STATE_IDLE;
+		}
 		break;
 	case SIMON_STATE_IDLE:
-		if (this->state== SIMON_STATE_CLIMP) {
+		if (this->state== SIMON_STATE_CLIMP && this->cauthang != NULL) {
 			this->vx = 0;
 			this->vy = 0;
 			state = SIMON_STATE_CLIMP;

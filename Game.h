@@ -15,8 +15,8 @@
 using namespace std;
 
 #define KEYBOARD_BUFFER_SIZE 1024
-#define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 240
+#define SCREEN_WIDTH 240
+#define SCREEN_HEIGHT 180
 
 class CGame
 {
@@ -85,6 +85,7 @@ public:
 	LPD3DXSPRITE GetSpriteHandler() { return this->spriteHandler; }
 
 	void SetCamPos(float x, float y) { cam_x = x; cam_y = y; }
+	void SetCamPos2(float x, float y, int mapW ,int mapH);
 	void GetCamPos(float &x, float &y) { x = cam_x; y = cam_y; }
 
 	static CGame * GetInstance();

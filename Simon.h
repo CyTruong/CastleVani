@@ -4,10 +4,11 @@
 #include "Whip.h"
 #include "SubWeapon.h"
 #include "Stairs.h"
+#include "PlayerStatus.h"
  
 #define SIMON_WALKING_SPEED		0.1f 
 
-#define SIMON_JUMP_SPEED_Y		0.5f
+#define SIMON_JUMP_SPEED_Y		0.35f
 #define SIMON_JUMP_DEFLECT_SPEED 0.2f
 #define SIMON_GRAVITY			0.002f
 #define SIMON_DIE_DEFLECT_SPEED	 0.5f
@@ -39,6 +40,8 @@
 #define SIMON_ANI_WHIP_SUB_RIGHT 15
 #define SIMON_ANI_DOWN_WHIP_SUB_LEFT 16
 #define SIMON_ANI_DOWN_WHIP_SUB_RIGHT 17
+#define SIMON_ANI_CLIMP_STAND_LEFT 18
+#define SIMON_ANI_CLIMP_STAND_RIGHT 19
  
 #define SIMON_ANI_DIE	22
 
@@ -57,7 +60,7 @@
 #define SIMON_SMALL_BBOX_HEIGHT 23
 
 
-#define SIMON_UNTOUCHABLE_TIME 5000
+#define SIMON_UNTOUCHABLE_TIME 1000
 
 
 class CSimon : public CGameObject
@@ -83,7 +86,9 @@ public:
 		whip = new Whip();
 		atk_able = false;
 		subweapon = new SubWeapon();
-		subweapon->SetWeaponType(1);
+		int subwptype;
+		PlayerStatus::getInstance()->getSubWeaponIndex(subwptype);
+		subweapon->SetWeaponType(subwptype);
 	}
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
 	virtual void Render();
@@ -91,6 +96,7 @@ public:
 	void SetStatus(int l) { status = l; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 	void atk();
+	void getSubweapon(int &sub) { subweapon->GetWeaponType(sub); };
 	void subatk();
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 };

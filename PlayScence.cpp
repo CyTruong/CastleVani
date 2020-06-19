@@ -8,9 +8,12 @@
 #include "Portal.h"
 #include "Grid.h"
 #include "EnemySpawn.h"
+#include "PlayerStatus.h"
 #include "Lamp.h"
 #include "Heart.h"
 #include "Stairs.h"
+#include "Candle.h"
+
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath):
@@ -31,6 +34,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define SCENE_SECTION_ANIMATION_SETS	5
 #define SCENE_SECTION_OBJECTS	6
 #define SCENE_SECTION_MAPSET 7
+#define SCENE_SECTION_ENEMY 8
 
 #define OBJECT_TYPE_MARIO	0
 #define OBJECT_TYPE_BRICK	1
@@ -39,6 +43,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define OBJECT_TYPE_HEART	4
 #define OBJECT_TYPE_WHIP_UPDATE 5
 #define OBJECT_TYPE_STAIRS	6
+#define OBJECT_TYPE_CANDLE	7
 #define OBJECT_TYPE_PORTAL	50
 
 #define MAX_SCENE_LINE 1024
@@ -178,6 +183,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
 	case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
 	case OBJECT_TYPE_HEART: obj = new Heart(); break;
+	case OBJECT_TYPE_CANDLE: obj = new Candle(); break;
 	case OBJECT_TYPE_STAIRS: {
 			float r = atof(tokens[4].c_str());
 			float b = atof(tokens[5].c_str());
@@ -207,8 +213,36 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	objects.push_back(obj);
 }
 
+void CPlayScene::_ParseSection_Enemy(string line)
+{
+	vector<string> tokens = split(line);
+
+	//DebugOut(L"--> %s\n",ToWSTR(line).c_str());
+
+	if (tokens.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
+
+	int enemy_type = atoi(tokens[0].c_str());
+	float x = atof(tokens[1].c_str());
+	float y = atof(tokens[2].c_str());
+
+	int ani_set_id = atoi(tokens[3].c_str());
+
+	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
+	Enemy *enemy = NULL;
+	enemy = EnemySpawn::getInstance()->getEnemy(enemy_type, x, y);
+	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+	enemy->SetAnimationSet(ani_set);
+	DebugOut(L"enemy spaw %f %f %d \n",x,y,ani_set_id);
+}
+
 void CPlayScene::Load()
 {
+	//setup thông tim player trc
+	int hp = 0;
+	int mana = 0;
+	PlayerStatus::getInstance()->getPlayerHp(hp);
+	PlayerStatus::getInstance()->getPlayerMana(mana);
+
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
 	gametime = 0;
@@ -237,6 +271,9 @@ void CPlayScene::Load()
 			section = SCENE_SECTION_ANIMATION_SETS; continue; }
 		if (line == "[OBJECTS]") { 
 			section = SCENE_SECTION_OBJECTS; continue; }
+		if (line == "[ENEMY]") {
+			EnemySpawn::getInstance()->Clear(player);
+			section = SCENE_SECTION_ENEMY; continue;}
 		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }	
 
 		//
@@ -250,14 +287,17 @@ void CPlayScene::Load()
 			case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
 			case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
 			case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
+			case SCENE_SECTION_ENEMY: _ParseSection_Enemy(line); break;
 		}
 	}
 	//Khởi tạo Ui
-	ui = new UI(10, 10, 3, 1);
+
+	ui = new UI(hp, mana, 3, 1);
 	ui->Initialize();
 	map->LoadTileSet();
 	Grid::GetInstance()->Push(objects);
 	f.close();
+	
 
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 
@@ -271,7 +311,13 @@ void CPlayScene::Update(DWORD dt)
 	gametime += dt;
 	if (gametime >= 1000)
 	{
-		ui->Update(300 - (int)gametime / 1000,10, 10, 3, 1);
+		int subweapon = 0;
+		player->getSubweapon(subweapon);
+		int hp = 10; int  mana = 10; int sceneid = 0;
+		PlayerStatus::getInstance()->getPlayerHp(hp);
+		PlayerStatus::getInstance()->getPlayerMana(mana);
+		PlayerStatus::getInstance()->getStateIndex(sceneid);
+		ui->Update(300 - (int)gametime / 1000,hp, mana, 3, sceneid, subweapon);
 	}
 	vector<LPGAMEOBJECT> objects = Grid::GetInstance()->Get();
 
@@ -299,19 +345,24 @@ void CPlayScene::Update(DWORD dt)
 	CGame *game = CGame::GetInstance();
 	cx -= game->GetScreenWidth() / 2;
 	cy -= game->GetScreenHeight() / 2;
-	if (cx < 0) {
-		cx = 0;
+
+	//CGame::GetInstance()->SetCamPos((int)cx,(int)cy-32);
+	int mapwidth, mapheight;
+	map->GetMapSize(mapwidth, mapheight);
+	
+	CGame::GetInstance()->SetCamPos2((int)cx, (int)cy  ,mapwidth,mapheight);
+
+
+	//check player
+	if (player->y > mapheight) {
+		int die = 0;
 	}
-	if (cy < 0) {
-		cy = 0;
-	}
-	CGame::GetInstance()->SetCamPos((int)cx,(int)cy-32);
 }
 
 void CPlayScene::Render()
 {
 	map->Render();
-	
+	EnemySpawn::getInstance()->Render();
 	vector<LPGAMEOBJECT> objects = Grid::GetInstance()->Get();
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
@@ -330,6 +381,8 @@ void CPlayScene::Unload()
 
 	objects.clear();
 	Grid::GetInstance()->clear();
+	delete map;
+	delete ui;
 	player = NULL;
 }
 
@@ -351,7 +404,10 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_C:
 		simon->SetStatus(SIMON_STA_ATK);
-		simon->atk();
+		if (CGame::GetInstance()->IsKeyDown(DIK_UP)) {
+			simon->subatk();
+		}else
+			simon->atk();
 		break;
 	case DIK_V:
 		simon->SetStatus(SIMON_STA_ATK);

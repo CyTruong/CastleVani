@@ -37,13 +37,13 @@ bool CAnimation::Render(float x, float y, int alpha)
 			currentFrame++;
 			lastFrameTime = now;
 			if (currentFrame == frames.size()) { 
+				frames[currentFrame-1]->GetSprite()->Draw(x, y, alpha);
 				currentFrame = 0; 
-				islastframe = true;
+				return true;
 			}
 
 		}
 	}
-
 	frames[currentFrame]->GetSprite()->Draw(x, y, alpha);
 	return islastframe;
 }

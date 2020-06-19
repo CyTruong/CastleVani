@@ -8,8 +8,9 @@ UI::UI(int _simonHP, int _simonEnergy, int _simonLife, int _stage)
 	simonEnergy = _simonEnergy;
 	simonLife = _simonLife;
 	stage = _stage;
-
+	subWeapon = 0;
 	enemyHP = 16;
+	score = 0;
 	LoadResource();
 }
 
@@ -31,20 +32,21 @@ bool UI::Initialize()
 		return false;
 	}
 
+	RECT rect;
+	SetRect(&rect, 0, 20, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	//SetRect(&rect, 0, 20, SCREEN_WIDTH, SCREEN_HEIGHT);
-	info = "SCORE-000000 TIME 0300 STAGE 01\n";
+	info = "SCORE-0000 TIME 0300 STAGE 01\n";
 	info += "PLAYER                 =05\n";
 	info += "ENEMY                 P=3\n";
 }
 
-void UI::Update(int time, int _simonHP, int _simonEnergy, int _simonLife, int _stage)
+void UI::Update(int time, int _simonHP, int _simonEnergy, int _simonLife, int _stage,int _subweapon)
 {
 	simonHP = _simonHP;
 	simonEnergy = _simonEnergy;
 	simonLife = _simonLife;
 	stage = _stage;
-
+	subWeapon = _subweapon;
 	string timeString = to_string(time);
 	switch (timeString.length())
 	{
@@ -62,7 +64,7 @@ void UI::Update(int time, int _simonHP, int _simonEnergy, int _simonLife, int _s
 	string stageString = to_string(stage);
 	if (stageString.length() <= 1)
 	{
-		stageString = "0" + stageString;
+		stageString = stageString;
 	}
 
 	string simonLifeString = to_string(simonLife);
@@ -73,7 +75,7 @@ void UI::Update(int time, int _simonHP, int _simonEnergy, int _simonLife, int _s
 		simonEnergyString = "0" + simonEnergyString;
 	}
 
-	info = "SCORE-000000 TIME " + timeString + " STAGE " + stageString + "\n";
+	info = "SCORE-0000 TIME " + timeString + " STAGE " + stageString + "\n";
 	info += "PLAYER                 =" + simonEnergyString + "\n";
 	info += "ENEMY                 P=" + simonLifeString + "\n";
 
@@ -86,12 +88,12 @@ void UI::Render()
 	//set UI theo cam
 
 	RECT rect;
-	SetRect(&rect, 0, 8, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetRect(&rect, 0, 1, SCREEN_WIDTH, SCREEN_HEIGHT);
 	//sprite heart
-	CSprites::GetInstance()->Get(3000)->Draw(camX+ 176,camY+ 16);
+	CSprites::GetInstance()->Get(3000)->Draw(camX+ 176,camY+ 9);
 	//Simon HP
 	float simonHPx = 56;
-	float simonHPy = 17;
+	float simonHPy = 10;
 	for (int i = 0; i < simonHP; i++)
 	{
 		CSprites::GetInstance()->Get(3001)->Draw(camX+simonHPx, camY+ simonHPy);
@@ -104,7 +106,7 @@ void UI::Render()
 	}
 	//Ememy HP
 	float ememyHPx = 56;
-	float enemyHPy = 25;
+	float enemyHPy = 18;
 	for (int i = 0; i < enemyHP; i++)
 	{
 		CSprites::GetInstance()->Get(3002)->Draw(camX + ememyHPx, camY + enemyHPy);
@@ -121,7 +123,10 @@ void UI::Render()
 		font->DrawTextA(NULL, info.c_str(), -1, &rect, DT_LEFT, D3DCOLOR_XRGB(255, 255, 255));
 	}
 	//Square
-	CSprites::GetInstance()->Get(3004)->Draw(camX + 140, camY + 16);
+	CSprites::GetInstance()->Get(3004)->Draw(camX + 140, camY + 12);
+	//draw subweapon
+	if(subWeapon!=0)
+	CSprites::GetInstance()->Get(3010 + subWeapon)->Draw(camX + 140, camY + 14);
 }
 
 void UI::LoadResource()

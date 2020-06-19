@@ -306,6 +306,30 @@ void CGame::SweptAABB(
 
 }
 
+void CGame::SetCamPos2(float x, float y,int mapW, int mapH)
+{
+	cam_x = x;
+	cam_y = y;
+	if (cam_x <=0) {
+		cam_x = 0;
+	}
+	if (cam_y <= 0) {
+		cam_y = 0; 
+	}
+	if (cam_x + SCREEN_WIDTH >= mapW) {
+		cam_x =mapW -   SCREEN_WIDTH;
+	}
+	if (cam_y + SCREEN_HEIGHT >= mapH) {
+		cam_y = mapH - SCREEN_HEIGHT +20;
+	}
+	if (mapW < SCREEN_WIDTH) {
+		cam_x = 0;
+	}
+	if (mapH < SCREEN_HEIGHT) {
+		cam_y = 0;
+	}
+}
+
 CGame *CGame::GetInstance()
 {
 	if (__instance == NULL) __instance = new CGame();

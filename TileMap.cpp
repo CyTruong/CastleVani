@@ -12,11 +12,11 @@ TileMap::TileMap(int id, int mapwidth, int mapheight, string mapfile, int textur
 
 	mapRow = 0;
 	mapCollum = 0;
-	mapMatrix = new int *[this->mapHeight];
+	/*mapMatrix = new int *[this->mapHeight];
 	for (int i = 0; i <= 37; i++)
 	{
 		mapMatrix[i] = new int[this->mapWidth];
-	}
+	}*/
 }
 
 
@@ -43,10 +43,15 @@ void TileMap::LoadTileSet() {
 		i= 0;
 		while (pch != NULL)
 		{
-			mapMatrix[j][i] = atoi(pch);
-			DebugOut(L"%d ", mapMatrix[j][i]);
+			mapMat[j * 100 + i] = atoi(pch);
+			//mapMatrix[j][i] = atoi(pch);
+			DebugOut(L"%d ", atoi(pch));
+		/*	if (mapMatrix[j][i] == 70 || mapMatrix[j][i] == 40) {
+				DebugOut(L"1	%d	%d	22\n", i * 16, j * 16);
+			}*/
 			i++;
 			pch = strtok(NULL, " ");
+			
 		}
 		DebugOut(L"\n");
 	}
@@ -64,7 +69,7 @@ void TileMap::Render() {
 	camposX = camposX / 16;
 	camposY = camposY / 16;
 	float camposX2 = camposX + (SCREEN_WIDTH / 16);
-	float camposY2 = camposY + (SCREEN_HEIGHT / 16);
+	float camposY2 = camposY + (SCREEN_HEIGHT / 16) ;
 	if (camposX  < 0) {
 		camposX = 0;
 	}
@@ -72,14 +77,19 @@ void TileMap::Render() {
 		camposY = 0;
 	}
 	
-	DebugOut(L"campos lt(%f,%f) rb(%f,%f) \n", ceil(camposX), ceil(camposY), ceil(camposX2) - 1, ceil(camposY2) - 1);
-	//for (int i = ceil(camposY); i < ceil(camposY2) - 1; i++) {
-	//	for (int j = ceil(camposX); j < ceil(camposX2) - 1; j++) {
-	for (int i = 0; i < mapRow-1; i++) {
-		for (int j = 0; j < mapCollum-1; j++){
-			sprites->Get(TEXTTURE_START + mapMatrix[i][j])->Draw(j * 16, i * 16);
+	//DebugOut(L"campos lt(%f,%f) rb(%f,%f) \n", floorf(camposX), floorf(camposY), ceil(camposX2) - 1, ceil(camposY2) - 1);
+	for (int i = ceil(camposY) + 2; i < ceil(camposY2) - 1; i++) {
+		for (int j = floorf(camposX); j < ceil(camposX2) - 1; j++) {
+			sprites->Get(TEXTTURE_START + mapMat[i*100+j])->Draw(j * 16, i * 16);
+
+			//sprites->Get(TEXTTURE_START + mapMatrix[i][j])->Draw(j * 16, i * 16);
 		}
 	}
+}
+
+void TileMap::Unload()
+{
+	
 }
 
 void TileMap::GetMapSize(int& width,int& height) {
@@ -93,4 +103,5 @@ void TileMap::Update() {
 
 TileMap::~TileMap()
 {
+	/*mapMatrix = NULL;*/
 }

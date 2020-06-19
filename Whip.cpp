@@ -4,6 +4,7 @@
 #include "Grid.h"
 #include "Heart.h"
 #include "ItemSpaw.h"
+#include "EnemySpawn.h"
 Whip::Whip()
 {
 
@@ -32,6 +33,7 @@ void Whip::atk(int dir) {
 		aniCount = 0;
 		isAtk = true;
 		this->dir = dir;
+		effted = true;
 }
 
 void Whip::GetBoundingBox(float &left, float &top, float &right, float &bottom) {
@@ -66,15 +68,35 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 				coObjects->at(i)->GetBoundingBox(l, t, r, b);
 				if (l > wl && l < wr) {
 					if (!(b < wt || t > wb)) {
+						
 						coObjects->at(i)->SetState(OBJ_DIE);
 						ItemSpaw::getInstance()->CreateObj(coObjects->at(i)->x, coObjects->at(i)->y);
 					}
 				}
-			}
-			
-		
+			}	
 		}
+		//enemy
+		vector<LPGAMEOBJECT>* enemys = EnemySpawn::getInstance()->getEnemlist();
+		for (UINT i = 0; i < enemys->size();i++) {
+			if (enemys->at(i)->state!=OBJ_DIE) {
+				float l, t, r, b;
+				enemys->at(i)->GetBoundingBox(l, t, r, b);
+				if (l > wl && l < wr) {
+					if (!(b < wt || t > wb)) {
+						if (effted) {
+							effted = false;
+							Enemy* enemy = dynamic_cast<Enemy *>(enemys->at(i));
+							DebugOut(L"enemy hp %d \n", enemy->Hp);
+							if (enemy->minusHp(1)) {
+								enemys->at(i)->SetState(OBJ_DIE);
 
+							}
+							//	ItemSpaw::getInstance()->CreateObj(coObjects->at(i)->x, coObjects->at(i)->y-20);
+						}
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -86,8 +108,6 @@ void Whip::Render() {
 
 		spriteIndex += 10 * aniCount;
 		sprites->Get(spriteIndex)->Draw(x, y);
-		//RenderBoundingBox();
-		//DebugOut(L"draw whips ani %d \n", spriteIndex);
 		DWORD now = GetTickCount();		
 		DWORD t = 80;
 		if (now - lastFrameTime > t)
