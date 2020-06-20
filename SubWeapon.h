@@ -12,11 +12,12 @@ private:
 	int weapon_type;
 	LPGAMEOBJECT weapon;
 	bool effted;
+	int damage;
 public:
 	bool isready;
 public:
 	SubWeapon();
-	void GetWeapponX(float &x) { x = weapon->x; }
+	void GetWeapponX(float &x) { if (weapon_type != SUB_WEAPON_NON) { x = weapon->x; } else x = 0; }
 	void SetWeaponType(int weapon_id);
 	void GetWeaponType(int &weapon_id);
 	void GetWeapon(LPGAMEOBJECT &weapon);

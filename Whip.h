@@ -31,11 +31,12 @@ private:
 	int whipLv;
 	int aniCount;
 	DWORD lastFrameTime;
-	bool isAtk;
 	int Direction;
 	int dir;
 	int level;
 	bool effted;
+public:
+	bool isAtk;
 public:
 	Whip();
 	void atk(int dir);

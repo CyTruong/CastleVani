@@ -27,7 +27,7 @@ public:
 	~UI();
 
 	bool Initialize();
-	void Update(int time, int simonHP, int simonEnergy, int simonLife, int stage,int subweapon);
+	void Update(int time, int simonHP, int simonEnergy, int simonLife, int stage,int subweapon,int score,int enemyHp);
 	void Render();
 
 	void LoadResource();

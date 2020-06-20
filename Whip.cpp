@@ -5,12 +5,14 @@
 #include "Heart.h"
 #include "ItemSpaw.h"
 #include "EnemySpawn.h"
+#include "PlayerStatus.h"
 Whip::Whip()
 {
 
 	aniCount = 0;
 	isAtk = false;
 	level = 0;
+	PlayerStatus::getInstance()->getWhipsLevel(level);
 }
 
 void Whip::getWhipLv(int &lv) {
@@ -22,9 +24,12 @@ void Whip::Update()
 	if (level < WHIP_LEVEL_MAX) {
 		level++;
 	}
+	PlayerStatus::getInstance()->SetWhipsLevel(level);
+
 }
 
 void Whip::setWhipLv(int lv) {
+	PlayerStatus::getInstance()->SetWhipsLevel(lv);
 	this->whipLv = lv;
 }
 
@@ -89,7 +94,7 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 							DebugOut(L"enemy hp %d \n", enemy->Hp);
 							if (enemy->minusHp(1)) {
 								enemys->at(i)->SetState(OBJ_DIE);
-
+								PlayerStatus::getInstance()->increaseScore(100);
 							}
 							//	ItemSpaw::getInstance()->CreateObj(coObjects->at(i)->x, coObjects->at(i)->y-20);
 						}

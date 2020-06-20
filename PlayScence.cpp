@@ -210,7 +210,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
 
 	obj->SetAnimationSet(ani_set);
-	objects.push_back(obj);
+	if (!dynamic_cast<CSimon *>(obj)) {
+		//là main r nên ko cần thêm vào list
+		objects.push_back(obj);
+	}
 }
 
 void CPlayScene::_ParseSection_Enemy(string line)
@@ -313,11 +316,14 @@ void CPlayScene::Update(DWORD dt)
 	{
 		int subweapon = 0;
 		player->getSubweapon(subweapon);
-		int hp = 10; int  mana = 10; int sceneid = 0;
+		int hp = 10; int  mana = 10; int sceneid = 0; int score = 0; int enemyHp = 16;
 		PlayerStatus::getInstance()->getPlayerHp(hp);
 		PlayerStatus::getInstance()->getPlayerMana(mana);
 		PlayerStatus::getInstance()->getStateIndex(sceneid);
-		ui->Update(300 - (int)gametime / 1000,hp, mana, 3, sceneid, subweapon);
+		PlayerStatus::getInstance()->getScore(score);
+		PlayerStatus::getInstance()->getEnemyHp(enemyHp);
+
+		ui->Update(300 - (int)gametime / 1000,hp, mana, 3, sceneid, subweapon, score, enemyHp);
 	}
 	vector<LPGAMEOBJECT> objects = Grid::GetInstance()->Get();
 
@@ -354,7 +360,9 @@ void CPlayScene::Update(DWORD dt)
 
 
 	//check player
-	if (player->y > mapheight) {
+	int hp = 0; 
+	PlayerStatus::getInstance()->getPlayerHp(hp);
+	if (player->y > mapheight || hp <= 0) {
 		int die = 0;
 	}
 }

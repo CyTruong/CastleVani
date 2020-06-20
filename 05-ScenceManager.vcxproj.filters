@@ -171,6 +171,9 @@
     <ClCompile Include="SubWeapon.cpp">
       <Filter>Source Files\Weapon</Filter>
     </ClCompile>
+    <ClCompile Include="Boss.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mario.h">
@@ -298,6 +301,9 @@
     </ClInclude>
     <ClInclude Include="EnemySpawn.h">
       <Filter>Header Files\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Boss.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

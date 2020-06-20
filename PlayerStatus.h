@@ -8,6 +8,8 @@ private:
 	int SubWeaponIndex;
 	int StateIndex;
 	int Score;
+	int Whipslevel;
+	int enemyHp;
 public:
 	static PlayerStatus* getInstance();
 	PlayerStatus();
@@ -16,15 +18,23 @@ public:
 	void getSubWeaponIndex(int& subweapon) { 
 		subweapon = this->SubWeaponIndex; 
 	}
-	void getStateIndex(int& stateindex) { StateIndex = stateindex; }
-	void getScore(int& score) { Score = score; }
+	void getStateIndex(int& stateindex) { stateindex = this->StateIndex; }
+	void getScore(int& score) { score = this->Score; }
+	void getWhipsLevel(int& level) { level = this->Whipslevel; }
+	void getEnemyHp(int& enemyhp) { enemyhp = this->enemyHp;  }
+	void increaseScore(int score) { 
+		this->Score = this->Score + score;
+	}
 	void SubHp(int minusHp) { this->PlayerHp -= minusHp; }
-	void SubMana(int minuMana) { this->PlayerHp -= minuMana;  }
+	void IncreaseMana(int mana) { this->PlayerMana += mana; }
+	void SubMana(int minuMana) { this->PlayerMana -= minuMana;  }
 	void SetSubWeapon(int subwp) { 
 		this->SubWeaponIndex = subwp; 
 	}
 	void SetStateIndex(int stateindex) { this->StateIndex = stateindex; }
 	void SetScore(int score) { this->Score = score; }
+	void SetWhipsLevel(int level) { this->Whipslevel = level; }
+	void SetEnemyHp(int hp) { this->enemyHp = hp; }
 	~PlayerStatus();
 };
 

@@ -16,7 +16,10 @@ PlayerStatus::PlayerStatus()
 {
 	PlayerHp = 10;
 	PlayerMana = 10;
-	SubWeaponIndex = 1;
+	SubWeaponIndex = 0;
+	Score = 0;
+	Whipslevel = 0;
+	enemyHp = 16;
 }
 
 

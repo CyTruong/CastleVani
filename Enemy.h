@@ -10,7 +10,7 @@ public:
 public:
 	Enemy();
 	virtual Enemy* clone();
-	bool minusHp(int dam) {
+	virtual bool minusHp(int dam) {
 		Hp = Hp - dam;
 		if (Hp<=0) {
 			return true;

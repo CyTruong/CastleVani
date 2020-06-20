@@ -34,6 +34,12 @@ EnemySpawn::EnemySpawn()
 	knight->player = player;
 	enemypoll[KnightIndex * 1000] = knight;
 	enemypoll[KnightIndex * 1000]->isFree = true;
+
+	enemypollIndex[BossIndex * 1000] = 1;
+	Boss* boss = new Boss();
+	boss->player = player;
+	enemypoll[BossIndex * 1000] = boss;
+	enemypoll[BossIndex * 1000]->isFree = true;
 }
 
 void EnemySpawn::Clear(LPGAMEOBJECT player)
@@ -61,6 +67,12 @@ void EnemySpawn::Clear(LPGAMEOBJECT player)
 	knight->player = player;
 	enemypoll[KnightIndex * 1000] = knight;
 	enemypoll[KnightIndex * 1000]->isFree = true;
+
+	enemypollIndex[BossIndex * 1000] = 1;
+	Boss* boss = new Boss();
+	boss->player = player;
+	enemypoll[BossIndex * 1000] = boss;
+	enemypoll[BossIndex * 1000]->isFree = true;
 }
 
 void EnemySpawn::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -130,7 +142,11 @@ Enemy* EnemySpawn::getEnemy(int type,float x,float y) {
 		enemy->player = this->player;
 	}
 	if (type == KnightIndex) {
-		enemy = new Woft();
+		enemy = new Knight();
+		enemy->player = this->player;
+	}
+	if (type == BossIndex) {
+		enemy = new Boss();
 		enemy->player = this->player;
 	}
 	enemy->isFree = false;

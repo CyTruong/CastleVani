@@ -17,7 +17,7 @@
 #define ITEM_SUB_WEAPON_2 3 //holy
 #define ITEM_SUB_WEAPON_3 4 //axe
 #define ITEM_SUB_WEAPON_4 5 // bmr
-#define ITEM_COUNT 5
+#define ITEM_COUNT 6
 
 class ItemSpaw
 {

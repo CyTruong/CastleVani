@@ -40,13 +40,15 @@ bool UI::Initialize()
 	info += "ENEMY                 P=3\n";
 }
 
-void UI::Update(int time, int _simonHP, int _simonEnergy, int _simonLife, int _stage,int _subweapon)
+void UI::Update(int time, int _simonHP, int _simonEnergy, int _simonLife, int _stage,int _subweapon,int _score,int _enemyHp)
 {
 	simonHP = _simonHP;
 	simonEnergy = _simonEnergy;
 	simonLife = _simonLife;
 	stage = _stage;
 	subWeapon = _subweapon;
+	score = _score;
+	enemyHP = _enemyHp;
 	string timeString = to_string(time);
 	switch (timeString.length())
 	{
@@ -62,9 +64,22 @@ void UI::Update(int time, int _simonHP, int _simonEnergy, int _simonLife, int _s
 	}
 
 	string stageString = to_string(stage);
-	if (stageString.length() <= 1)
+	//if (stageString.length() <= 1)
+	//{
+	//	stageString = stageString;
+	//}
+	string scoreString = to_string(score);
+	switch (scoreString.length())
 	{
-		stageString = stageString;
+	case 3:
+		scoreString = "0" + scoreString;
+		break;
+	case 2:
+		scoreString = "00" + scoreString;
+		break;
+	case 1:
+		scoreString = "0000" + scoreString;
+		break;
 	}
 
 	string simonLifeString = to_string(simonLife);
@@ -75,7 +90,7 @@ void UI::Update(int time, int _simonHP, int _simonEnergy, int _simonLife, int _s
 		simonEnergyString = "0" + simonEnergyString;
 	}
 
-	info = "SCORE-0000 TIME " + timeString + " STAGE " + stageString + "\n";
+	info = "SCORE-"+scoreString+" TIME " + timeString + " STAGE " + stageString + "\n";
 	info += "PLAYER                 =" + simonEnergyString + "\n";
 	info += "ENEMY                 P=" + simonLifeString + "\n";
 

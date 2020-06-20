@@ -11,7 +11,7 @@ Boomerang::Boomerang()
 	this->vy = 0;
 	this->vx = 0;
 	this->x = 0;
-	this->y = 0;
+	this->y = 800;
 }
 
 void Boomerang::GetBoundingBox(float & left, float & top, float & right, float & bottom)

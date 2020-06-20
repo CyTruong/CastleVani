@@ -126,11 +126,15 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	subweapon->Update(dt, coObjects);
 	float subX = 0;
 	subweapon->GetWeapponX(subX);
-	LPGAMEOBJECT subwb; subweapon->GetWeapon(subwb);
-	if (abs(subX - this->x) >= SCREEN_WIDTH / 2 || subwb->vx == 0) {
-		subweapon->isready = true;
+	LPGAMEOBJECT subwb;
+	subweapon->GetWeapon(subwb);
+	int subweaponid;
+	subweapon->GetWeaponType(subweaponid);
+	if (subweaponid!=SUB_WEAPON_NON) {
+		if (abs(subX - this->x) >= SCREEN_WIDTH / 2 || subwb->vx == 0) {
+			subweapon->isready = true;
+		}
 	}
-
 
 #pragma endregion
 
@@ -177,15 +181,19 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				e->obj->state = OBJ_DIE;
 				if (dynamic_cast<WhipUpdate *>(e->obj)) {
 					this->whip->Update();
-				}
+				}else
 				if (dynamic_cast<HolyPicker *>(e->obj)) {
 					this->subweapon->SetWeaponType(SUB_WEAPON_HOLY);
-				}
+				}else
 				if (dynamic_cast<AxePicker *>(e->obj)) {
 					this->subweapon->SetWeaponType(SUB_WEAPON_AXE);
-				}
+				}else
 				if (dynamic_cast<BoomerangPicker*>(e->obj)) {
 					this->subweapon->SetWeaponType(SUB_WEAPON_BOMERANG);
+				}
+				else {
+					//Là heart chắc rồi
+					PlayerStatus::getInstance()->IncreaseMana(1);
 				}
 
 			}
@@ -249,7 +257,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 #pragma endregion
 
 	// No collision occured, proceed normally
-	
+	//DebugOut(L"Simon jump %d \n", isJump);
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
@@ -257,25 +265,29 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 void CSimon::atk() {
 	DebugOut(L"x %f y %f \n",x,y);
-	if (vx==0) {
-		if (nx > 0) {
-			whip->atk(WHIP_DIR_RIGHT);
+	if (!whip->isAtk) {
+
+		if (vx == 0) {
+			if (nx > 0) {
+				whip->atk(WHIP_DIR_RIGHT);
+			}
+			else
+			{
+				whip->atk(WHIP_DIR_LEFT);
+			}
 		}
-		else
-		{
-			whip->atk(WHIP_DIR_LEFT);
+		else {
+			if (vx > 0) {
+				whip->atk(WHIP_DIR_RIGHT);
+			}
+			else
+			{
+				whip->atk(WHIP_DIR_LEFT);
+			}
 		}
+		/*whip->atk(WHIP_DIR_LEFT);*/
+
 	}
-	else {
-		if (vx > 0) {
-			whip->atk(WHIP_DIR_RIGHT);
-		}
-		else
-		{
-			whip->atk(WHIP_DIR_LEFT);
-		}
-	}
-	/*whip->atk(WHIP_DIR_LEFT);*/
 }
 
 void CSimon::subatk()
@@ -471,9 +483,16 @@ void CSimon::SetState(int state)
 		nx = -1;
 		break;
 	case SIMON_STATE_JUMP:
-		vy = -SIMON_JUMP_SPEED_Y;
-		isJump = 1;
-		break;
+	{
+		if (isJump==0) {
+			vy = -SIMON_JUMP_SPEED_Y;
+			isJump = 1;
+			break;
+		}
+		else
+			break;
+	}
+	
 	case SIMON_STATE_CLIMP:
 		if (this->cauthang != NULL) {
 			vy = -0.02f;

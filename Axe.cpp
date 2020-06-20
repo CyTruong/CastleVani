@@ -11,7 +11,7 @@ Axe::Axe()
 	this->vy = 0;
 	this->vx = 0;
 	this->x = 0;
-	this->y = 0;
+	this->y = 500;
 	this->state = AXE_STATE_IDLE;
 }
 
@@ -33,8 +33,8 @@ void Axe::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (state==-1) {
 		this->vy = 0;
 		this->vx = 0;
-		this->x = -20;
-		this->y = -20;
+		this->x = 0;
+		this->y = 500;
 		this->state = AXE_STATE_IDLE;
 	}
 

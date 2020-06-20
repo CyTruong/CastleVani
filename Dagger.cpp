@@ -29,6 +29,14 @@ void Dagger::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		y += dy;
 	}
 
+	if (state== -1 || vx==0) {
+		this->state = 0;
+		this->vy = 0;
+		this->vx = 0;
+		this->x = 0;
+		this->y = 0;
+	}
+
 }
 
 void Dagger::GetBoundingBox(float & left, float & top, float & right, float & bottom)

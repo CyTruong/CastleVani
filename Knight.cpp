@@ -50,7 +50,7 @@ void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 
 	}
-	DebugOut(L"Knight dir %d \n",dir);
+	//DebugOut(L"Knight dir %d \n",dir);
 
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
@@ -90,7 +90,6 @@ void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 
 	}
-
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
 

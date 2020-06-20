@@ -19,9 +19,13 @@ void Bat::GetBoundingBox(float & left, float & top, float & right, float & botto
 void Bat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (vx == 0 && vy == 0) {
-		float dis = sqrt((player->x - this->x)*(player->x - this->x) + (player->y - this->y)*(player->y - this->y));
+		float dis = sqrt((player->x - this->x)*(player->x - this->x) + (player->y - this->y)*(player->y - this->y));	
 		if (dis < 80) {
-			vx = 0.2;
+			if (player->x < this->x) {
+				vx = -0.02;
+			}
+			else
+				vx = 0.02;
 		}
 	}
 	else {
