@@ -1,21 +1,21 @@
 #pragma once
 #include "Enemy.h"
+#define GHOST_SPEED 0.04f
+#define GHOST_BBOX_WIDTH 16
+#define GHOST_BBOX_HEIGHT 16
+#define GHOST_ANI_LEFT 0
+#define GHOST_ANI_RIGHT 1
 
-#define ZOMBIE_SPEED 0.02f;
-#define ZOMBIE_BBOX_WIDTH 16
-#define ZOMBIE_BBOX_HEIGHT 32
-
-#define ZOMBIE_ANI_RUN_LEFT 0
-#define ZOMBIE_ANI_RUN_R 1
-#define ZOMBIE_ANI_DIE -1
-class Zombie : public Enemy
+class Ghost : public Enemy
 {
+private:
+	float dirX, dirY;
 public:
-	Zombie();
+	Ghost();
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects);
 	virtual void Render();
 	virtual Enemy* clone();
-	~Zombie();
+	~Ghost();
 };
 

@@ -17,8 +17,8 @@ ItemSpaw::ItemSpaw()
 LPGAMEOBJECT ItemSpaw::CreateObj(int x, int y)
 {
 	srand(time(NULL));   // Initialization, should only be called once.
-	int r = rand() % ITEM_COUNT;
-	//int r = 1;
+	//int r = rand() % ITEM_COUNT;
+	int r = 6;
 
 	DebugOut(L"Get item %d \n",r);
 	if (r == ITEM_HEART) {
@@ -56,6 +56,12 @@ LPGAMEOBJECT ItemSpaw::CreateObj(int x, int y)
 		bmrpk->SetPosition(x, y + 5);
 		Grid::GetInstance()->Insert(bmrpk);
 		return bmrpk;
+	}
+	if (r== ITEM_SUB_WEAPON_5) {
+		TimestopPicker *tspk = new TimestopPicker();
+		tspk->SetPosition(x, y + 5);
+		Grid::GetInstance()->Insert(tspk);
+		return tspk;
 	}
 	return NULL;
 }

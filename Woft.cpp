@@ -1,5 +1,5 @@
 #include "Woft.h"
-
+#include "PlayerStatus.h"
 
 
 Woft::Woft()
@@ -24,21 +24,11 @@ void Woft::GetBoundingBox(float & left, float & top, float & right, float & bott
 
 void Woft::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if (!PlayerStatus::getInstance()->isZAWARUDO()) {
 
-	if (abs(player->x - this->x) < 95   && !start) {
-		start = true;
-		state = WOFT_STATE_RUN;
-		if (player->x < this->x) {
-			dir = -1;
-		}
-		else {
-			dir = 1;
-		}
-	}
-	if (start) {
-		int ran = rand() % 10 + 1;
-		if (abs(player->x - this->x) > 95 + ran) {
-			isJumped = false;
+		if (abs(player->x - this->x) < 95 && !start) {
+			start = true;
+			state = WOFT_STATE_RUN;
 			if (player->x < this->x) {
 				dir = -1;
 			}
@@ -46,65 +36,78 @@ void Woft::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				dir = 1;
 			}
 		}
-		if (dir==-1) {
-			this->vx = -WOFT_SPEED;
-		}
-		else {
-			this->vx = WOFT_SPEED;
+		if (start) {
+			int ran = rand() % 10 + 1;
+			if (abs(player->x - this->x) > 95 + ran) {
+				isJumped = false;
+				if (player->x < this->x) {
+					dir = -1;
+				}
+				else {
+					dir = 1;
+				}
+			}
+			if (dir == -1) {
+				this->vx = -WOFT_SPEED;
+			}
+			else {
+				this->vx = WOFT_SPEED;
+			}
+
+			if ((abs(player->x - this->x) < 60) && !isJumped) {
+				vy = -WOFT_JUMP_SPEED;
+				state = WOFT_STATE_JUMP;
+				isJumped = true;
+			}
+
 		}
 
-		if ((abs(player->x - this->x) < 60 ) && !isJumped) {
-			vy = -WOFT_JUMP_SPEED;
-			state = WOFT_STATE_JUMP;
-			isJumped = true;
-		}
 
+		// Calculate dx, dy 
+		CGameObject::Update(dt);
+		// Simple fall down
+		vy += WOFT_GRAVITY * dt;
+
+		vector<LPCOLLISIONEVENT> coEvents;
+		vector<LPCOLLISIONEVENT> coEventsResult;
+
+		coEvents.clear();
+
+		// turn off collision when die 
+		if (state != OBJ_DIE)
+			CalcPotentialCollisions(coObjects, coEvents);
+
+
+
+		if (coEvents.size() == 0)
+		{
+			x += dx;
+			y += dy;
+		}
+		else
+		{
+			state = WOFT_STATE_RUN;
+
+			float min_tx, min_ty, nx = 0, ny;
+			float rdx = 0;
+			float rdy = 0;
+
+			// TODO: This is a very ugly designed function!!!!
+			FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+
+			x += min_tx * dx + nx * 0.4f;
+			y += min_ty * dy + ny * 0.4f;
+
+			if (nx != 0) vx = 0;
+			if (ny != 0) vy = 0;
+
+
+		}
+		//DebugOut(L"dis %f vx %f state %d  \n", abs(player->x - this->x), vx,state);
+
+		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	}
 
-
-	// Calculate dx, dy 
-	CGameObject::Update(dt);
-	// Simple fall down
-	vy += WOFT_GRAVITY * dt;
-
-	vector<LPCOLLISIONEVENT> coEvents;
-	vector<LPCOLLISIONEVENT> coEventsResult;
-
-	coEvents.clear();
-
-	// turn off collision when die 
-	if (state != OBJ_DIE)
-		CalcPotentialCollisions(coObjects, coEvents);
-
-
-
-	if (coEvents.size() == 0)
-	{
-		x += dx;
-		y += dy;
-	}
-	else
-	{
-		state = WOFT_STATE_RUN;
-
-		float min_tx, min_ty, nx = 0, ny;
-		float rdx = 0;
-		float rdy = 0;
-
-		// TODO: This is a very ugly designed function!!!!
-		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
-
-		x += min_tx * dx + nx * 0.4f;
-		y += min_ty * dy + ny * 0.4f;
-
-		if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;
-
-	
-	}
-	//DebugOut(L"dis %f vx %f state %d  \n", abs(player->x - this->x), vx,state);
-
-	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
 
 void Woft::Render()
@@ -139,7 +142,7 @@ void Woft::Render()
 			ani = WOFT_ANI_JUMP_RIGHT;
 		else ani = WOFT_ANI_JUMP_LEFT;
 	}
-	animation_set->at(ani)->Render(x, y);
+	animation_set->at(ani)->Render(x, y,255,!PlayerStatus::getInstance()->isZAWARUDO());
 	RenderBoundingBox();
 }
 

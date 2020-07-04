@@ -6,6 +6,7 @@
 #define SUB_WEAPON_HOLY 2
 #define SUB_WEAPON_AXE 3
 #define SUB_WEAPON_BOMERANG 4
+#define SUB_WEAPON_THEWORD 5
 class SubWeapon 
 {
 private:

@@ -43,6 +43,12 @@
     <Filter Include="Source Files\Weapon">
       <UniqueIdentifier>{d3b76671-f236-4a0f-8f8d-c817778246e8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\StartScene">
+      <UniqueIdentifier>{250e2933-9c4c-48f4-885f-17342440cbcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\StartScene">
+      <UniqueIdentifier>{f1c75265-ad75-4496-9478-37d3d6bba85e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Mario.cpp">
@@ -172,6 +178,30 @@
       <Filter>Source Files\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="Boss.cpp">
+      <Filter>Source Files\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Ghost.cpp">
+      <Filter>Source Files\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="FloatingBrick.cpp">
+      <Filter>Source Files\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="TimestopPicker.cpp">
+      <Filter>Source Files\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeStop.cpp">
+      <Filter>Source Files\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="Skeleton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonBone.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StartScene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EmptyObj.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -287,9 +317,6 @@
     <ClInclude Include="Whip.h">
       <Filter>Header Files\Weapon</Filter>
     </ClInclude>
-    <ClInclude Include="Zombie.h">
-      <Filter>Header Files\Obj</Filter>
-    </ClInclude>
     <ClInclude Include="SubWeapon.h">
       <Filter>Header Files\Weapon</Filter>
     </ClInclude>
@@ -302,7 +329,34 @@
     <ClInclude Include="EnemySpawn.h">
       <Filter>Header Files\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="Zombie.h">
+      <Filter>Header Files\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="TimestopPicker.h">
+      <Filter>Header Files\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeStop.h">
+      <Filter>Header Files\Item</Filter>
+    </ClInclude>
     <ClInclude Include="Boss.h">
+      <Filter>Header Files\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="FloatingBrick.h">
+      <Filter>Header Files\Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="Ghost.h">
+      <Filter>Header Files\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Skeleton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonBone.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StartScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EmptyObj.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

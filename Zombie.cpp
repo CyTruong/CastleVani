@@ -1,7 +1,7 @@
 ﻿#include "Zombie.h"
 #include "Sprites.h"
 #include "Textures.h"
-
+#include "PlayerStatus.h"
 
 Zombie::Zombie()
 {
@@ -21,12 +21,14 @@ void Zombie::GetBoundingBox(float &left, float &top, float &right, float &bottom
 void Zombie::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 	CGameObject::Update(dt, coObjects);
 
-	
-	x += dx;
-	y += dy;
-	if (vx < 0 && x < 0) {
-		x = 0; vx = -vx;
+	if (!PlayerStatus::getInstance()->isZAWARUDO()) {
+		x += dx;
+		y += dy;
+		if (vx < 0 && x < 0) {
+			x = 0; vx = -vx;
+		}
 	}
+	
 	
 }
 
@@ -40,7 +42,7 @@ void Zombie::Render() {
 	{
 		ani = ZOMBIE_ANI_RUN_R;
 	}
-	animation_set->at(ani)->Render(x, y);
+	animation_set->at(ani)->Render(x, y,255, !PlayerStatus::getInstance()->isZAWARUDO());
 	RenderBoundingBox();
 }
 

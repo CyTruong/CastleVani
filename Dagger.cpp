@@ -18,23 +18,24 @@ void Dagger::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	CGameObject::Update(dt);
 
-	vector<LPCOLLISIONEVENT> coEvents;
-	coEvents.clear();
+	//vector<LPCOLLISIONEVENT> coEvents;
+	//coEvents.clear();
 
-	// turn off collision when die 
-	CalcPotentialCollisions(coObjects, coEvents);
-	if (coEvents.size() == 0)
-	{
-		x += dx;
-		y += dy;
-	}
-
+	//// turn off collision when die 
+	//CalcPotentialCollisions(coObjects, coEvents);
+	//if (coEvents.size() == 0)
+	//{
+	//	x += dx;
+	//	y += dy;
+	//}
+	x += dx;
+	y += dy;
 	if (state== -1 || vx==0) {
 		this->state = 0;
 		this->vy = 0;
 		this->vx = 0;
-		this->x = 0;
-		this->y = 0;
+		this->x = 100;
+		this->y = 800;
 	}
 
 }

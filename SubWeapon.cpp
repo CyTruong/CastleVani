@@ -5,6 +5,7 @@
 #include "Boomerang.h"
 #include "EnemySpawn.h"	
 #include "PlayerStatus.h"
+#include "TimeStop.h"
 SubWeapon::SubWeapon()
 {
 	PlayerStatus::getInstance()->getSubWeaponIndex(weapon_type);
@@ -33,7 +34,10 @@ void SubWeapon::SetWeaponType(int weapon_id)
 		weapon = new Boomerang();
 		damage = 2;
 		break;
-	default:
+	case SUB_WEAPON_THEWORD:
+		weapon = new TimeStop();
+		damage = 0;
+	default: 
 		break;
 	}
 }
@@ -75,18 +79,23 @@ void SubWeapon::Atk(float x, float y, float dir)
 		}
 		if (weapon_type == SUB_WEAPON_AXE) {
 			if (dir < 0) {
+				this->weapon->vx = -0.12;
+			}
+			else
+				this->weapon->vx = 0.12;
+			this->weapon->vy = -0.25f;
+		}
+		if (weapon_type == SUB_WEAPON_BOMERANG) {
+			if (dir < 0) {
 				this->weapon->vx = -0.15;
 			}
 			else
 				this->weapon->vx = 0.15;
-			this->weapon->vy = -0.16f;
 		}
-		if (weapon_type == SUB_WEAPON_BOMERANG) {
-			if (dir < 0) {
-				this->weapon->vx = -0.3;
+		if (weapon_type == SUB_WEAPON_THEWORD) {
+			if (weapon->vx==0) {
+				this->weapon->vx = 10;
 			}
-			else
-				this->weapon->vx = 0.3;
 		}
 	}
 	

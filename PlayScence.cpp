@@ -13,6 +13,7 @@
 #include "Heart.h"
 #include "Stairs.h"
 #include "Candle.h"
+#include "FloatingBrick.h"
 
 using namespace std;
 
@@ -45,7 +46,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define OBJECT_TYPE_STAIRS	6
 #define OBJECT_TYPE_CANDLE	7
 #define OBJECT_TYPE_PORTAL	50
-
+#define OBJECT_TYPE_FLOATINGBRICK 8
 #define MAX_SCENE_LINE 1024
 
 
@@ -199,6 +200,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			obj = new CPortal(x, y, r, b, scene_id);
 		}
 		break;
+	case OBJECT_TYPE_FLOATINGBRICK:
+		{
+			float from = atof(tokens[4].c_str());
+			float to = atof(tokens[5].c_str());
+			obj = new FloatingBrick(from, to);
+			break;
+		}
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;

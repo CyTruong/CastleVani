@@ -31,6 +31,8 @@ void Grid::Push(vector<LPGAMEOBJECT> gobjs) {
 		int w = (int) ( obj->x / GRID_WIDTH ); 
 		int h = (int) ( obj->y / GRID_HEIGHT );
 		Nodes[h][w].arrObj.push_back(obj);
+		DebugOut(L"GRID w h %d %d ",w,h);
+
 	}
 }
 

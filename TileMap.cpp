@@ -46,7 +46,7 @@ void TileMap::LoadTileSet() {
 			mapMat[j * 100 + i] = atoi(pch);
 			//mapMatrix[j][i] = atoi(pch);
 			DebugOut(L"%d ", atoi(pch));
-		/*	if (mapMatrix[j][i] == 70 || mapMatrix[j][i] == 40) {
+	  		/*if (mapMat[j * 100 + i]  == 0) {
 				DebugOut(L"1	%d	%d	22\n", i * 16, j * 16);
 			}*/
 			i++;

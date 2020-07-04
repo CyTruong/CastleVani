@@ -1,27 +1,26 @@
-#include "WhipUpdate.h"
+#include "TimestopPicker.h"
 
 
 
-WhipUpdate::WhipUpdate()
-{ 
+TimestopPicker::TimestopPicker()
+{
 	this->state = 0;
 	this->atk_able = false;
 	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
-	LPANIMATION_SET ani_set = animation_sets->Get(5);
-
+	LPANIMATION_SET ani_set = animation_sets->Get(31);
 	this->SetAnimationSet(ani_set);
 	this->vy = -0.2f;
 }
 
-void WhipUpdate::GetBoundingBox(float & left, float & top, float & right, float & bottom)
+void TimestopPicker::GetBoundingBox(float & left, float & top, float & right, float & bottom)
 {
 	left = x;
 	top = y;
-	right = x + BBOX_WHIP_WIDTH;
-	bottom = y + BBOX_WHIP_HEIGHT;
+	right = x + BBOX_TP_WIDTH;
+	bottom = y + BBOX_TP_HEIGHT;
 }
 
-void WhipUpdate::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+void TimestopPicker::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt);
 
@@ -58,13 +57,13 @@ void WhipUpdate::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 }
 
-void WhipUpdate::Render()
+void TimestopPicker::Render()
 {
 	if (state != OBJ_DIE)
-		animation_set->at(WHIP_ANI_IDLE)->Render(x, y);
+		animation_set->at(TP_ANI_IDLE)->Render(x, y);
 }
 
 
-WhipUpdate::~WhipUpdate()
+TimestopPicker::~TimestopPicker()
 {
 }

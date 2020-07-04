@@ -7,13 +7,20 @@
 #include "Woft.h"
 #include "Knight.h"
 #include "Boss.h"
+#include "Ghost.h"
+#include "Skeleton.h"
+#include "SkeletonBone.h"
+
 
 #define ZombieIndex 1
 #define BatIndex 2
-#define WoftIndex 3 //Wolf
+#define WoftIndex 3
 #define KnightIndex 4
 #define BossIndex 5
-#define COUNT 5
+#define GhostIndex 6
+#define SkeletonIndex 7
+#define SkeletonBoneIndex 8
+#define COUNT 8
 
 
 class EnemySpawn

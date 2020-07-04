@@ -9,7 +9,8 @@ private:
 	int StateIndex;
 	int Score;
 	int Whipslevel;
-	int enemyHp;
+	int EnemyHp;
+	bool ZA_WARUDO;
 public:
 	static PlayerStatus* getInstance();
 	PlayerStatus();
@@ -21,10 +22,11 @@ public:
 	void getStateIndex(int& stateindex) { stateindex = this->StateIndex; }
 	void getScore(int& score) { score = this->Score; }
 	void getWhipsLevel(int& level) { level = this->Whipslevel; }
-	void getEnemyHp(int& enemyhp) { enemyhp = this->enemyHp;  }
+	void getEnemyHp(int& enemyhp) { enemyhp = this->EnemyHp;  }
 	void increaseScore(int score) { 
 		this->Score = this->Score + score;
 	}
+	bool isZAWARUDO() { return ZA_WARUDO; }
 	void SubHp(int minusHp) { this->PlayerHp -= minusHp; }
 	void IncreaseMana(int mana) { this->PlayerMana += mana; }
 	void SubMana(int minuMana) { this->PlayerMana -= minuMana;  }
@@ -34,7 +36,10 @@ public:
 	void SetStateIndex(int stateindex) { this->StateIndex = stateindex; }
 	void SetScore(int score) { this->Score = score; }
 	void SetWhipsLevel(int level) { this->Whipslevel = level; }
-	void SetEnemyHp(int hp) { this->enemyHp = hp; }
+	void SetEnemyHp(int hp) { this->EnemyHp = hp; }
+	void ZAWARUDO(bool tokkitomare) { 
+		this->ZA_WARUDO = tokkitomare;
+	}
 	~PlayerStatus();
 };
 

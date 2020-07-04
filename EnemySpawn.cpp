@@ -40,6 +40,24 @@ EnemySpawn::EnemySpawn()
 	boss->player = player;
 	enemypoll[BossIndex * 1000] = boss;
 	enemypoll[BossIndex * 1000]->isFree = true;
+
+	enemypollIndex[GhostIndex * 1000] = 1;
+	Ghost* ghost = new Ghost();
+	ghost->player = player;
+	enemypoll[GhostIndex * 1000] = ghost;
+	enemypoll[GhostIndex * 1000]->isFree = true;
+
+	enemypollIndex[SkeletonIndex * 1000] = 1;
+	Skeleton* skeleton = new Skeleton();
+	skeleton->player = player;
+	enemypoll[SkeletonIndex * 1000] = skeleton;
+	enemypoll[SkeletonIndex * 1000]->isFree = true;
+
+	enemypollIndex[SkeletonBoneIndex * 1000] = 1;
+	SkeletonBone* bone = new SkeletonBone();
+	bone->player = player;
+	enemypoll[SkeletonBoneIndex * 1000] = bone;
+	enemypoll[SkeletonBoneIndex * 1000]->isFree = true;
 }
 
 void EnemySpawn::Clear(LPGAMEOBJECT player)
@@ -73,6 +91,24 @@ void EnemySpawn::Clear(LPGAMEOBJECT player)
 	boss->player = player;
 	enemypoll[BossIndex * 1000] = boss;
 	enemypoll[BossIndex * 1000]->isFree = true;
+
+	enemypollIndex[GhostIndex * 1000] = 1;
+	Ghost* ghost = new Ghost();
+	ghost->player = player;
+	enemypoll[GhostIndex * 1000] = ghost;
+	enemypoll[GhostIndex * 1000]->isFree = true;
+
+	enemypollIndex[SkeletonIndex * 1000] = 1;
+	Skeleton* skeleton = new Skeleton();
+	skeleton->player = player;
+	enemypoll[SkeletonIndex * 1000] = skeleton;
+	enemypoll[SkeletonIndex * 1000]->isFree = true;
+
+	enemypollIndex[SkeletonBoneIndex * 1000] = 1;
+	SkeletonBone* bone = new SkeletonBone();
+	bone->player = player;
+	enemypoll[SkeletonBoneIndex * 1000] = bone;
+	enemypoll[SkeletonBoneIndex * 1000]->isFree = true;
 }
 
 void EnemySpawn::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -147,6 +183,18 @@ Enemy* EnemySpawn::getEnemy(int type,float x,float y) {
 	}
 	if (type == BossIndex) {
 		enemy = new Boss();
+		enemy->player = this->player;
+	}
+	if (type == GhostIndex) {
+		enemy = new Ghost();
+		enemy->player = this->player;
+	}
+	if (type == SkeletonIndex) {
+		enemy = new Skeleton();
+		enemy->player = this->player;
+	}
+	if (type == SkeletonBoneIndex) {
+		enemy = new SkeletonBone();
 		enemy->player = this->player;
 	}
 	enemy->isFree = false;

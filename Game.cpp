@@ -5,6 +5,7 @@
 #include "Utils.h"
 
 #include "PlayScence.h"
+#include "StartScene.h"
 
 CGame * CGame::__instance = NULL;
 
@@ -328,6 +329,8 @@ void CGame::SetCamPos2(float x, float y,int mapW, int mapH)
 	if (mapH < SCREEN_HEIGHT) {
 		cam_y = 0;
 	}
+
+	//DebugOut(L" camX camY %f %f \n", cam_x, cam_y);
 }
 
 CGame *CGame::GetInstance()
@@ -361,8 +364,12 @@ void CGame::_ParseSection_SCENES(string line)
 	if (tokens.size() < 2) return;
 	int id = atoi(tokens[0].c_str());
 	LPCWSTR path = ToLPCWSTR(tokens[1]);
-
-	LPSCENE scene = new CPlayScene(id, path);
+	LPSCENE scene;
+	if (id==0) {
+		scene = new StartScene(id, path);
+	}
+	else
+	    scene = new CPlayScene(id, path);
 	scenes[id] = scene;
 }
 

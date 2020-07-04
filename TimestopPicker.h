@@ -1,20 +1,16 @@
 #pragma once
-#include "GameObject.h"
-#define BBOX_BMR_WIDTH 16
-#define BBOX_BMR_HEIGHT 9
-
-
-class Boomerang :
-	public CGameObject
+#include "Item.h"
+#define BBOX_TP_WIDTH 16
+#define BBOX_TP_HEIGHT 16
+#define TP_ANI_IDLE 0
+class TimestopPicker :
+	public Item
 {
-private : 
-	long timetravel;
-	bool isback;
 public:
-	Boomerang();
+	TimestopPicker();
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects);
 	virtual void Render();
-	~Boomerang();
+	~TimestopPicker();
 };
 

@@ -11,8 +11,11 @@
 #include "Portal.h"
 #include "HolyPicker.h"
 #include "AxePicker.h"
+#include "DaggerPicker.h"
 #include "BoomerangPicker.h"
+#include "TimestopPicker.h"
 #include "EnemySpawn.h"
+#include "FloatingBrick.h"
 
 void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
@@ -182,6 +185,9 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				if (dynamic_cast<WhipUpdate *>(e->obj)) {
 					this->whip->Update();
 				}else
+				if (dynamic_cast<DaggerPicker*>(e->obj)) {
+					this->subweapon->SetWeaponType(SUB_WEAPON_DAGGER);
+				}else
 				if (dynamic_cast<HolyPicker *>(e->obj)) {
 					this->subweapon->SetWeaponType(SUB_WEAPON_HOLY);
 				}else
@@ -190,15 +196,25 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				}else
 				if (dynamic_cast<BoomerangPicker*>(e->obj)) {
 					this->subweapon->SetWeaponType(SUB_WEAPON_BOMERANG);
+				}else
+				if (dynamic_cast<TimestopPicker*>(e->obj)) {
+					this->subweapon->SetWeaponType(SUB_WEAPON_THEWORD);
 				}
 				else {
 					//Là heart chắc rồi
 					PlayerStatus::getInstance()->IncreaseMana(1);
 				}
-
+				this->y = this->y - 0.1f;
 			}
 			else
-				if (dynamic_cast<Stairs *>(e->obj)) // if e->obj is Goomba 
+				if (dynamic_cast<FloatingBrick*>(e->obj)) {
+					if (abs(this->vx) < abs(e->obj->vx)) {
+						this->x += e->obj->dx * 2; //x2 bec uda 2times
+					}
+
+				}
+			else
+				if (dynamic_cast<Stairs *>(e->obj)) 
 				{
 					Stairs* stairs = dynamic_cast<Stairs*>(e->obj);
 					DebugOut(L"Tren cau thang \n");
@@ -224,7 +240,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						}
 					}
 				}
-				else if (dynamic_cast<CPortal *>(e->obj))
+			else 
+				if (dynamic_cast<CPortal *>(e->obj))
 				{
 					CPortal *p = dynamic_cast<CPortal *>(e->obj);
 					DebugOut(L"[INFO] Switching to scene %d", p->GetSceneId());
@@ -247,7 +264,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				if (l > wl && l < wr) {
 					if (!(b < wt || t > wb)) {
 						StartUntouchable();
-						vy = -SIMON_JUMP_SPEED_Y;
+						vy = -SIMON_JUMP_SPEED_Y *2/3;
 						PlayerStatus::getInstance()->SubHp(1);
 					}
 				}
@@ -292,23 +309,31 @@ void CSimon::atk() {
 
 void CSimon::subatk()
 {
-	if (vx == 0) {
-		if (nx > 0) {
-			subweapon->Atk(this->x, this->y, 1);
+	int id = 0;
+	subweapon->GetWeaponType(id);
+	if (id!=SUB_WEAPON_NON) {
+		if (vx == 0) {
+			if (nx > 0) {
+				subweapon->Atk(this->x, this->y, 1);
+			}
+			else
+			{
+				subweapon->Atk(this->x, this->y, -1);
+			}
 		}
-		else
-		{
-			subweapon->Atk(this->x, this->y,-1);
+		else {
+			if (vx > 0) {
+				subweapon->Atk(this->x, this->y, 1);
+			}
+			else
+			{
+				subweapon->Atk(this->x, this->y, -1);
+			}
 		}
-	}
-	else {
-		if (vx > 0) {
-			subweapon->Atk(this->x, this->y, 1);
-		}
-		else
-		{
-			subweapon->Atk(this->x, this->y, -1);
-		}
+	}	
+	else
+	{
+		atk();
 	}
 }
 

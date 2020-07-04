@@ -19,7 +19,9 @@ PlayerStatus::PlayerStatus()
 	SubWeaponIndex = 0;
 	Score = 0;
 	Whipslevel = 0;
-	enemyHp = 16;
+	EnemyHp = 16;
+	StateIndex = 1;
+	ZA_WARUDO = false;
 }
 
 

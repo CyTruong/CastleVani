@@ -1,5 +1,6 @@
 #include "Boomerang.h"
-
+#include "PlayerStatus.h"
+#include "debug.h"
 
 
 Boomerang::Boomerang()
@@ -12,6 +13,8 @@ Boomerang::Boomerang()
 	this->vx = 0;
 	this->x = 0;
 	this->y = 800;
+	this->timetravel = 0;
+	this->isback = false;
 }
 
 void Boomerang::GetBoundingBox(float & left, float & top, float & right, float & bottom)
@@ -26,16 +29,33 @@ void Boomerang::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	CGameObject::Update(dt);
 
-	vector<LPCOLLISIONEVENT> coEvents;
-	coEvents.clear();
+	//vector<LPCOLLISIONEVENT> coEvents;
+	//coEvents.clear();
 
-	// turn off collision when die 
-	CalcPotentialCollisions(coObjects, coEvents);
-	if (coEvents.size() == 0)
-	{
-		x += dx;
-		y += dy;
+	//// turn off collision when die 
+	//CalcPotentialCollisions(coObjects, coEvents);
+	//if (coEvents.size() == 0)
+	//{
+	//	x += dx;
+	//	y += dy;
+	//}
+	if (vx!=0) {
+		timetravel += dt;
 	}
+	if (timetravel > 550 && !isback) {
+		vx = -vx;
+		isback = true;
+	}
+	if (timetravel > 1000 ) {
+		timetravel = 0;
+		isback = false;
+		x = 0;
+		y = 1000;
+		vx = 0;
+		vy = 0;
+	}
+	x += dx;
+	y += dy;
 }
 
 void Boomerang::Render()

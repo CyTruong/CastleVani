@@ -15,9 +15,9 @@
 using namespace std;
 
 #define KEYBOARD_BUFFER_SIZE 1024
-#define SCREEN_WIDTH 240
-#define SCREEN_HEIGHT 180
-
+#define SCREEN_WIDTH 256
+#define SCREEN_HEIGHT 256
+	
 class CGame
 {
 	static CGame * __instance;

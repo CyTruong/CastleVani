@@ -1,23 +1,23 @@
-#include "Bat.h"
+#include "Ghost.h"
 #include "PlayerStatus.h"
 
 
-Bat::Bat()
+Ghost::Ghost()
 {
 	dirX = 0;
 	dirY = 0;
 }
 
-void Bat::GetBoundingBox(float & left, float & top, float & right, float & bottom)
+void Ghost::GetBoundingBox(float & left, float & top, float & right, float & bottom)
 {
 	left = x;
 	top = y;
-	right = x + BAT_BBOX_WIDTH;
-	bottom = y + BAT_BBOX_HEIGHT;
+	right = x + GHOST_BBOX_WIDTH;
+	bottom = y + GHOST_BBOX_HEIGHT;
 }
 
-void Bat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
-{
+void Ghost::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{	
 	if (!PlayerStatus::getInstance()->isZAWARUDO()) {
 		if (vx == 0 && vy == 0) {
 			float dis = sqrt((player->x - this->x)*(player->x - this->x) + (player->y - this->y)*(player->y - this->y));
@@ -36,22 +36,21 @@ void Bat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			this->dirY = (this->dirY + vexY) / 2;
 
 			if (dirX > 0) {
-				this->vx = BAT_SPEED;
+				this->vx = GHOST_SPEED;
 			}
 			else {
-				this->vx = -BAT_SPEED;
+				this->vx = -GHOST_SPEED;
 			}
 			this->vy = dirY * this->vx / dirX;
 
-			if (abs(vy) > BAT_SPEED*1.5) {
+			if (abs(vy) > GHOST_SPEED*1.5) {
 				if (vy < 0) {
-					vy = -BAT_SPEED;
+					vy = -GHOST_SPEED;
 				}
 				if (vy > 0) {
-					vy = BAT_SPEED;
+					vy = GHOST_SPEED;
 				}
 			}
-
 			//DebugOut(L"Bat  x %f y %f \n",x,player->y);
 		}
 		CGameObject::Update(dt, coObjects);
@@ -62,30 +61,23 @@ void Bat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 }
 
-void Bat::Render()
-{
-	int ani = 0;
 
-	if (vx < 0) {
-		ani = BAT_ANI_LEFT;
-	}
-	if (vx > 0 )
-	{
-		ani = BAT_ANI_RIGHT;
-	}
-	if (vx = 0) {
-		ani = BAT_ANI_IDLE;
+void Ghost::Render()
+{
+	int ani = GHOST_ANI_LEFT;
+	if (vx >= 0 ) {
+		ani = GHOST_ANI_RIGHT;
 	}
 	animation_set->at(ani)->Render(x, y,255,!PlayerStatus::getInstance()->isZAWARUDO());
 	RenderBoundingBox();
 }
 
-Enemy * Bat::clone()
+Enemy * Ghost::clone()
 {
 	return nullptr;
 }
 
 
-Bat::~Bat()
+Ghost::~Ghost()
 {
 }
