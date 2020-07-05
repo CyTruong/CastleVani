@@ -11,6 +11,10 @@ class Bat : public Enemy
 {
 private:
 	float dirX, dirY;
+	float pVectorX, pVectorY;
+	int circleY;
+	bool Y_down;
+	long timer;
 public:
 	Bat();
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);

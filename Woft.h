@@ -3,7 +3,7 @@
 #define WOFT_SPEED 0.12f
 
 #define WOFT_GRAVITY 0.002f
-#define WOFT_JUMP_SPEED 0.3f
+#define WOFT_JUMP_SPEED 0.35f
 
 
 #define WOFT_STATE_IDLE 0

@@ -317,21 +317,20 @@ void CPlayScene::Load()
 
 void CPlayScene::Update(DWORD dt)
 {
-	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
-	// TO-DO: This is a "dirty" way, need a more organized way 
+
 	gametime += dt;
 	if (gametime >= 1000)
 	{
 		int subweapon = 0;
 		player->getSubweapon(subweapon);
-		int hp = 10; int  mana = 10; int sceneid = 0; int score = 0; int enemyHp = 16;
+		int hp = 10; int  mana = 10; int sceneid = 0; int score = 0; int enemyHp = 16; int life = 3;
 		PlayerStatus::getInstance()->getPlayerHp(hp);
 		PlayerStatus::getInstance()->getPlayerMana(mana);
 		PlayerStatus::getInstance()->getStateIndex(sceneid);
 		PlayerStatus::getInstance()->getScore(score);
 		PlayerStatus::getInstance()->getEnemyHp(enemyHp);
-
-		ui->Update(300 - (int)gametime / 1000,hp, mana, 3, sceneid, subweapon, score, enemyHp);
+		PlayerStatus::getInstance()->getPlayerLife(life);
+		ui->Update(300 - (int)gametime / 1000,hp, mana, life, sceneid, subweapon, score, enemyHp);
 	}
 	vector<LPGAMEOBJECT> objects = Grid::GetInstance()->Get();
 
@@ -371,7 +370,20 @@ void CPlayScene::Update(DWORD dt)
 	int hp = 0; 
 	PlayerStatus::getInstance()->getPlayerHp(hp);
 	if (player->y > mapheight || hp <= 0) {
-		int die = 0;
+		int state = 0;
+		int life = 0;
+		PlayerStatus::getInstance()->getStateIndex(state);
+		PlayerStatus::getInstance()->getPlayerLife(life);
+		if (life!=0) {
+	
+			PlayerStatus::getInstance()->Reset();
+			CGame::GetInstance()->SwitchScene(state);
+		}
+		else {
+			CGame::GetInstance()->SwitchScene(10);
+
+		}
+		
 	}
 }
 

@@ -35,7 +35,7 @@ bool UI::Initialize()
 	RECT rect;
 	SetRect(&rect, 0, 20, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	info = "SCORE-0000 TIME 0300 STAGE 01\n";
+	info = "SCORE-00000 TIME 0300 STAGE 01\n";
 	info += "PLAYER                 =05\n";
 	info += "ENEMY                 P=3\n";
 }

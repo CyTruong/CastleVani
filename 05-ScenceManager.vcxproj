@@ -138,6 +138,7 @@
     <ClCompile Include="Dagger.cpp" />
     <ClCompile Include="DaggerPicker.cpp" />
     <ClCompile Include="EmptyObj.cpp" />
+    <ClCompile Include="EndScene.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemySpawn.cpp" />
     <ClCompile Include="FloatingBrick.cpp" />
@@ -191,6 +192,7 @@
     <ClInclude Include="Dagger.h" />
     <ClInclude Include="DaggerPicker.h" />
     <ClInclude Include="EmptyObj.h" />
+    <ClInclude Include="EndScene.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemySpawn.h" />
     <ClInclude Include="FloatingBrick.h" />

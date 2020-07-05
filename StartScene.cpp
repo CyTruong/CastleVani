@@ -80,6 +80,7 @@ void StartScene::Load()
 
 
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
+	CGame::GetInstance()->SetCamPos2(0, 0, 256, 256);
 
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 }
@@ -96,6 +97,11 @@ void StartScene::Render()
 
 void StartScene::Unload()
 {
+	for (int i = 0; i < objects.size(); i++)
+		delete objects[i];
+
+	objects.clear();
+	
 }
 
 

@@ -8,7 +8,7 @@ Skeleton::Skeleton()
 	this->vy = 0;
 	start = false;
 	dir = -1;
-	Hp = 4;
+	Hp = 2;
 	atkinterval = 1; 
 	state = SKELETON_STATE_RUN;
 }
@@ -28,7 +28,7 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (80 <  abs(player->x - this->x) &&  abs(player->x - this->x) < 100  	) {
 			//if(atkinterval!=0)
 				atkinterval += dt;
-			if (atkinterval >1000 && atkinterval != 0) {
+			if (atkinterval >500 && atkinterval != 0) {
 				atkinterval = 0;
 				ThrowBone();
 			}
@@ -102,7 +102,11 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void Skeleton::Render()
 {
-	animation_set->at(0)->Render(x, y, 255, !PlayerStatus::getInstance()->isZAWARUDO());
+	 int ani = 0;
+	 if (this->x < player->x) {
+		 ani = 1;
+	 }
+	animation_set->at(ani)->Render(x, y, 255, !PlayerStatus::getInstance()->isZAWARUDO());
 
 }
 
@@ -119,10 +123,10 @@ void Skeleton::ThrowBone()
 	bone->SetAnimationSet(ani_set);
 	bone->SetPosition(this->x, this->y);
 	if (this->x < player->x) {
-		bone->vx = 0.08f;
+		bone->vx = 0.09f;
 	}
 	else {
-		bone->vx = -0.08f;
+		bone->vx = -0.09f;
 	}
 	bone->vy = -0.25f;
 	bone->state = 0;

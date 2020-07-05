@@ -43,11 +43,11 @@
     <Filter Include="Source Files\Weapon">
       <UniqueIdentifier>{d3b76671-f236-4a0f-8f8d-c817778246e8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\StartScene">
-      <UniqueIdentifier>{250e2933-9c4c-48f4-885f-17342440cbcb}</UniqueIdentifier>
+    <Filter Include="Header Files\Scene">
+      <UniqueIdentifier>{cedf9292-5343-44e0-a28b-5589bff0b88f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\StartScene">
-      <UniqueIdentifier>{f1c75265-ad75-4496-9478-37d3d6bba85e}</UniqueIdentifier>
+    <Filter Include="Source Files\Scene">
+      <UniqueIdentifier>{aa53e946-2c97-4ec4-81ee-debb7fd20638}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -70,9 +70,6 @@
       <Filter>Source Files\GameComponents</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files\GameComponents</Filter>
-    </ClCompile>
-    <ClCompile Include="Scence.cpp">
       <Filter>Source Files\GameComponents</Filter>
     </ClCompile>
     <ClCompile Include="TileMap.cpp">
@@ -165,9 +162,6 @@
     <ClCompile Include="Textures.cpp">
       <Filter>Source Files\GameComponents</Filter>
     </ClCompile>
-    <ClCompile Include="PlayScence.cpp">
-      <Filter>Source Files\GameComponents</Filter>
-    </ClCompile>
     <ClCompile Include="PlayerStatus.cpp">
       <Filter>Source Files\GameComponents</Filter>
     </ClCompile>
@@ -192,17 +186,26 @@
     <ClCompile Include="TimeStop.cpp">
       <Filter>Source Files\Weapon</Filter>
     </ClCompile>
-    <ClCompile Include="Skeleton.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SkeletonBone.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="StartScene.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="EndScene.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayScence.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scence.cpp">
+      <Filter>Source Files\Scene</Filter>
     </ClCompile>
     <ClCompile Include="EmptyObj.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="Skeleton.cpp">
+      <Filter>Source Files\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -293,13 +296,7 @@
     <ClInclude Include="Textures.h">
       <Filter>Header Files\GameComponent</Filter>
     </ClInclude>
-    <ClInclude Include="Scence.h">
-      <Filter>Header Files\GameComponent</Filter>
-    </ClInclude>
     <ClInclude Include="Sprites.h">
-      <Filter>Header Files\GameComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayScence.h">
       <Filter>Header Files\GameComponent</Filter>
     </ClInclude>
     <ClInclude Include="PlayerStatus.h">
@@ -347,17 +344,26 @@
     <ClInclude Include="Ghost.h">
       <Filter>Header Files\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="Skeleton.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="EmptyObj.h">
+      <Filter>Header Files\Obj</Filter>
     </ClInclude>
-    <ClInclude Include="SkeletonBone.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="EndScene.h">
+      <Filter>Header Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scence.h">
+      <Filter>Header Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayScence.h">
+      <Filter>Header Files\Scene</Filter>
     </ClInclude>
     <ClInclude Include="StartScene.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="EmptyObj.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="SkeletonBone.h">
+      <Filter>Header Files\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Skeleton.h">
+      <Filter>Header Files\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

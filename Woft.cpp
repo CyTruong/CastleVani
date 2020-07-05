@@ -11,7 +11,7 @@ Woft::Woft()
 	collision_able = false;
 	isJumped = false;
 	dir = -1;
-	state = WOFT_STATE_RUN;
+	state = WOFT_STATE_IDLE;
 }
 
 void Woft::GetBoundingBox(float & left, float & top, float & right, float & bottom)
@@ -36,6 +36,12 @@ void Woft::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				dir = 1;
 			}
 		}
+		else {
+			if(!start)
+				state = WOFT_STATE_IDLE;
+		}
+
+
 		if (start) {
 			int ran = rand() % 10 + 1;
 			if (abs(player->x - this->x) > 95 + ran) {
@@ -106,6 +112,8 @@ void Woft::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		//DebugOut(L"dis %f vx %f state %d  \n", abs(player->x - this->x), vx,state);
 
 		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+
+		//DebugOut(L"state %d \n",state);
 	}
 
 }

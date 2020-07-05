@@ -6,6 +6,7 @@
 
 #include "PlayScence.h"
 #include "StartScene.h"
+#include "EndScene.h"
 
 CGame * CGame::__instance = NULL;
 
@@ -365,11 +366,20 @@ void CGame::_ParseSection_SCENES(string line)
 	int id = atoi(tokens[0].c_str());
 	LPCWSTR path = ToLPCWSTR(tokens[1]);
 	LPSCENE scene;
-	if (id==0) {
+
+	switch (id)
+	{
+	case 0 :
 		scene = new StartScene(id, path);
+		break;
+	case 10 :
+		scene = new EndScene(id, path);
+		break;
+	default:
+		scene = new CPlayScene(id, path);
+		break;
 	}
-	else
-	    scene = new CPlayScene(id, path);
+
 	scenes[id] = scene;
 }
 
@@ -431,5 +441,8 @@ void CGame::SwitchScene(int scene_id)
 	CAnimations::GetInstance()->Clear();
 
 	CGame::GetInstance()->SetKeyHandler(s->GetKeyEventHandler());
+	
+	PlayerStatus::getInstance()->SetStateIndex(scene_id);
+	
 	s->Load();
 }
