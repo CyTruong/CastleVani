@@ -224,7 +224,7 @@ void CStartScenceKeyHandler::KeyState(BYTE * states)
 void CStartScenceKeyHandler::OnKeyDown(int KeyCode)
 {
 	if (KeyCode == DIK_J) {
-		CGame::GetInstance()->SwitchScene(1);
+		CGame::GetInstance()->SwitchScene(20);
 	}
 }
 

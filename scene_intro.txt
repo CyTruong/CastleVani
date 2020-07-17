@@ -1,0 +1,44 @@
+# id	file_path	transparent_color_r	g	b
+[TEXTURES]
+10	textures\intro.png	116	116	116
+20	textures\simon.png	116	116	116
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+#bg
+1	1	1	256	192	10
+
+# walk left
+2	29	22	45	52	20
+3	46	22	58	52	20
+4	61	22	78	52	20
+# stand
+5	362	21	377	52	20
+
+#bat
+6	1	194	8	200	10
+7	10	194	17	200	10
+
+#cloud
+8	19	194	50	209	10
+
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]
+10	1	100
+11	2	200	3	200	4	200
+12	5	100
+13	6	100	7	100
+14	8	100
+# id	ani1	ani2	ani3
+[ANIMATION_SETS]
+1	10
+2	11
+3	12
+4	13
+5	14
+[OBJECTS]
+# type	x	y	ani_set_id	extra_settings per object type
+3	0	50	1
+2	500	500	3
+1	220	180	2
+4	100	80	4
+5	195	75	5

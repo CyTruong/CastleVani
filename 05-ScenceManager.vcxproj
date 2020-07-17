@@ -150,11 +150,13 @@
     <ClCompile Include="HeartMini.cpp" />
     <ClCompile Include="HolyPicker.cpp" />
     <ClCompile Include="HolyWater.cpp" />
+    <ClCompile Include="IntroScence.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="ItemSpaw.cpp" />
     <ClCompile Include="Knight.cpp" />
     <ClCompile Include="Koopas.cpp" />
     <ClCompile Include="Lamp.cpp" />
+    <ClCompile Include="MoneyBag.cpp" />
     <ClCompile Include="Monkey.cpp" />
     <ClCompile Include="PlayerStatus.cpp" />
     <ClCompile Include="Portal.cpp" />
@@ -207,11 +209,13 @@
     <ClInclude Include="HeartMini.h" />
     <ClInclude Include="HolyPicker.h" />
     <ClInclude Include="HolyWater.h" />
+    <ClInclude Include="IntroScence.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemSpaw.h" />
     <ClInclude Include="Knight.h" />
     <ClInclude Include="Koopas.h" />
     <ClInclude Include="Lamp.h" />
+    <ClInclude Include="MoneyBag.h" />
     <ClInclude Include="Monkey.h" />
     <ClInclude Include="PlayerStatus.h" />
     <ClInclude Include="Portal.h" />
@@ -238,6 +242,9 @@
     <ClInclude Include="WhipUpdate.h" />
     <ClInclude Include="Woft.h" />
     <ClInclude Include="Zombie.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

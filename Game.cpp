@@ -7,6 +7,7 @@
 #include "PlayScence.h"
 #include "StartScene.h"
 #include "EndScene.h"
+#include "IntroScence.h"
 
 CGame * CGame::__instance = NULL;
 
@@ -374,6 +375,9 @@ void CGame::_ParseSection_SCENES(string line)
 		break;
 	case 10 :
 		scene = new EndScene(id, path);
+		break;
+	case 20 :
+		scene = new IntroScence(id, path);
 		break;
 	default:
 		scene = new CPlayScene(id, path);

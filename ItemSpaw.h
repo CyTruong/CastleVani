@@ -13,6 +13,7 @@
 #include "TimestopPicker.h"
 #include "HeartMini.h"
 #include "BossOrb.h"
+#include "MoneyBag.h"
 #define ITEM_HEART 0
 #define ITEM_WHIP_UPDATE 1
 #define ITEM_SUB_WEAPON_1 2 //dagger
@@ -22,7 +23,8 @@
 #define ITEM_SUB_WEAPON_5 6	// zaaaaaa waaaaa rruuuuu doooooo
 #define ITEM_HEART_MINI	7
 #define ITEM_BOSS_ORB 8
-#define ITEM_COUNT 9
+#define ITEM_MONYEY_BAG 9
+#define ITEM_COUNT 10
 
 class ItemSpaw
 {

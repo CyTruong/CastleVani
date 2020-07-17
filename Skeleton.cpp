@@ -41,7 +41,7 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				dir = -1;
 			}
 		}
-		if (abs(player->x - this->x) >= 150) {
+		if (abs(player->x - this->x) >= 170) {
 			if (player->x < this->x) {
 				dir = -1;
 			}

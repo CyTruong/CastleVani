@@ -75,6 +75,12 @@ LPGAMEOBJECT ItemSpaw::CreateObj(int x, int y,int itemindex)
 		Grid::GetInstance()->Insert(orb);
 		return orb;
 	}
+	if (itemindex == ITEM_MONYEY_BAG) {
+		MoneyBag* bag = new MoneyBag();
+		bag->SetPosition(x, y + 5);
+		Grid::GetInstance()->Insert(bag);
+		return bag;
+	}
 	return NULL;
 }
 

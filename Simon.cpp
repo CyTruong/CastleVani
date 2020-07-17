@@ -19,6 +19,7 @@
 #include "Heart.h"
 #include "HeartMini.h"
 #include "BossOrb.h"
+#include "MoneyBag.h"
 
 void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
@@ -214,6 +215,9 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				else
 				if (dynamic_cast<BossOrb*>(e->obj)) {
 					PlayerStatus::getInstance()->increaseScore(1000);
+				}
+				if (dynamic_cast<MoneyBag*>(e->obj)) {
+					PlayerStatus::getInstance()->increaseScore(300);
 				}
 				this->y = this->y - 0.1f;
 			}
