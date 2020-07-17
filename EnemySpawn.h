@@ -10,7 +10,8 @@
 #include "Ghost.h"
 #include "Skeleton.h"
 #include "SkeletonBone.h"
-
+#include "dRaven.h"
+#include "Monkey.h"
 
 #define ZombieIndex 1
 #define BatIndex 2
@@ -20,7 +21,9 @@
 #define GhostIndex 6
 #define SkeletonIndex 7
 #define SkeletonBoneIndex 8
-#define COUNT 8
+#define RavenIndex 9
+#define MonkeyIndex 10
+#define COUNT 10
 
 
 class EnemySpawn

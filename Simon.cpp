@@ -16,6 +16,9 @@
 #include "TimestopPicker.h"
 #include "EnemySpawn.h"
 #include "FloatingBrick.h"
+#include "Heart.h"
+#include "HeartMini.h"
+#include "BossOrb.h"
 
 void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
@@ -200,9 +203,17 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				if (dynamic_cast<TimestopPicker*>(e->obj)) {
 					this->subweapon->SetWeaponType(SUB_WEAPON_THEWORD);
 				}
-				else {
-					//Là heart chắc rồi
+				else
+				if (dynamic_cast<Heart*>(e->obj)) {
+					PlayerStatus::getInstance()->IncreaseMana(10);
+				}
+				else
+				if (dynamic_cast<HeartMini*>(e->obj)) {
 					PlayerStatus::getInstance()->IncreaseMana(1);
+				}
+				else
+				if (dynamic_cast<BossOrb*>(e->obj)) {
+					PlayerStatus::getInstance()->increaseScore(1000);
 				}
 				this->y = this->y - 0.1f;
 			}
@@ -273,6 +284,14 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 #pragma endregion
 
+	#pragma region Zero Hp
+	int hp = 0;
+	PlayerStatus::getInstance()->getPlayerHp(hp);
+	if (hp==0) {
+		SetState(SIMON_STATE_DIE);
+	}
+	#pragma endregion
+
 	// No collision occured, proceed normally
 	//DebugOut(L"Simon jump %d \n", isJump);
 	// clean up collision events
@@ -341,7 +360,14 @@ void CSimon::Render()
 {
 	int ani;
 	if (state == SIMON_STATE_DIE)
-		ani =	SIMON_ANI_DIE;
+	{
+		if (vx <= 0 ) {
+			ani = SIMON_ANI_DIE_LEFT;
+		}
+		else {
+			ani = SIMON_ANI_DIE_RIGHT;
+		}
+	}
 	else
 	if ((abs(vy)>0.1 && onAir ==1)||isJump==1) {
 		if (status == SIMON_STA_ATK) {
@@ -464,7 +490,7 @@ void CSimon::Render()
 	}
 	
 	int alpha = 255;
-	if (untouchable) {
+	if (untouchable && state!=SIMON_STATE_DIE) {
 		if (vx == 0)
 		{
 			if (nx > 0)
@@ -489,6 +515,22 @@ void CSimon::Render()
 
 	if (islastF && status == SIMON_STA_ATK) {
 		status = SIMON_STA_NOR;
+	}
+	if (islastF && state == SIMON_STATE_DIE) {
+
+		int state = 0;
+		int life = 0;
+		PlayerStatus::getInstance()->getStateIndex(state);
+		PlayerStatus::getInstance()->getPlayerLife(life);
+		if (life!=0) {
+
+			PlayerStatus::getInstance()->Reset();
+			CGame::GetInstance()->SwitchScene(state);
+		}
+		else {
+			CGame::GetInstance()->SwitchScene(10);
+
+		}
 	}
 	  
 	/*RenderBoundingBox();*/
@@ -539,7 +581,8 @@ void CSimon::SetState(int state)
 		
 		break;
 	case SIMON_STATE_DIE:
-		vy = -SIMON_DIE_DEFLECT_SPEED;
+		vy = 0;
+		vx = 0;
 		break;
 	}
 	CGameObject::SetState(state);

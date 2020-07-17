@@ -58,7 +58,7 @@ public:
 	bool atk_able;
 	bool collision_able;
 	int nx;	 
-
+	int dropItem;
 	int state;
 
 	DWORD dt; 

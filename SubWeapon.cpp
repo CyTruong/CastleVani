@@ -120,7 +120,7 @@ void SubWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							DebugOut(L"enemy hp %d \n", enemy->Hp);
 							if (enemy->minusHp(damage)) {
 								enemys->at(i)->SetState(OBJ_DIE);
-
+								PlayerStatus::getInstance()->increaseScore(100);
 							}
 							weapon->SetState(-1);
 

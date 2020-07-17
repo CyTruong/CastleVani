@@ -1,4 +1,4 @@
-﻿#include <iostream>
+﻿	#include <iostream>
 #include <fstream>
 
 #include "PlayScence.h"
@@ -36,6 +36,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define SCENE_SECTION_OBJECTS	6
 #define SCENE_SECTION_MAPSET 7
 #define SCENE_SECTION_ENEMY 8
+#define SCENE_SECTION_OBJECTS_GRID 9
 
 #define OBJECT_TYPE_MARIO	0
 #define OBJECT_TYPE_BRICK	1
@@ -123,6 +124,7 @@ void CPlayScene::_ParseSection_ANIMATIONS(string line)
 	}
 
 	CAnimations::GetInstance()->Add(ani_id, ani);
+	DebugOut(L"Animation %d \n", ani_id);
 }
 
 void CPlayScene::_ParseSection_ANIMATION_SETS(string line)
@@ -146,11 +148,9 @@ void CPlayScene::_ParseSection_ANIMATION_SETS(string line)
 	}
 
 	CAnimationSets::GetInstance()->Add(ani_set_id, s);
+	DebugOut(L"Ani set %d \n", ani_set_id);
 }
 
-/*
-	Parse a line in section [OBJECTS] 
-*/
 void CPlayScene::_ParseSection_OBJECTS(string line)
 {
 	vector<string> tokens = split(line);
@@ -162,7 +162,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	int object_type = atoi(tokens[0].c_str());
 	float x = atof(tokens[1].c_str());
 	float y = atof(tokens[2].c_str());
-
+	int gw = (int)(x / GRID_WIDTH);
+	int gh = (int)(y / GRID_HEIGHT);
 	int ani_set_id = atoi(tokens[3].c_str());
 
 	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
@@ -179,17 +180,40 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		obj = new CSimon(); 
 		player = (CSimon*)obj;  
+		DebugOut(L"%d\t%f\t%f\t%d\t%d\t%d\n", object_type,x,y,ani_set_id,gw,gh);
 		break;
-	case OBJECT_TYPE_LAMP: obj = new Lamp(); break;
-	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
+	case OBJECT_TYPE_LAMP:
+		{	
+			float item = atof(tokens[4].c_str());
+			obj = new Lamp();
+			obj->dropItem = item;
+			DebugOut(L"%d\t%f\t%f\t%d\t%f\t%d\t%d\n", object_type, x, y, ani_set_id,item, gw, gh);
+
+			break;
+		}
+	case OBJECT_TYPE_BRICK: {
+		obj = new CBrick(); 
+		DebugOut(L"%d\t%f\t%f\t%d\t%d\t%d\n", object_type, x, y, ani_set_id, gw, gh);
+		break;
+	}
 	case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
 	case OBJECT_TYPE_HEART: obj = new Heart(); break;
-	case OBJECT_TYPE_CANDLE: obj = new Candle(); break;
+	case OBJECT_TYPE_CANDLE:
+		{
+			float item = atof(tokens[4].c_str());
+			obj = new Candle();
+			obj->dropItem = item;
+			DebugOut(L"%d\t%f\t%f\t%d\t%f\t%d\t%d\n", object_type, x, y, ani_set_id, item, gw, gh);
+
+			break;
+		}
 	case OBJECT_TYPE_STAIRS: {
 			float r = atof(tokens[4].c_str());
 			float b = atof(tokens[5].c_str());
 			int t = atof(tokens[6].c_str());
 			obj = new Stairs(x, y, r, b,t);
+			DebugOut(L"%d\t%f\t%f\t%d\t%f\t%f\t%d\t%d\t%d\n", object_type, x, y, ani_set_id,r,b,t, gw, gh);
+
 			break;
 		}
 	case OBJECT_TYPE_PORTAL:
@@ -198,6 +222,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			float b = atof(tokens[5].c_str());
 			int scene_id = atoi(tokens[6].c_str());
 			obj = new CPortal(x, y, r, b, scene_id);
+			DebugOut(L"%d\t%f\t%f\t%d\t%f\t%f\t%d\t%d\t%d\n", object_type, x, y, ani_set_id, r, b, scene_id, gw, gh);
+
 		}
 		break;
 	case OBJECT_TYPE_FLOATINGBRICK:
@@ -205,6 +231,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			float from = atof(tokens[4].c_str());
 			float to = atof(tokens[5].c_str());
 			obj = new FloatingBrick(from, to);
+			DebugOut(L"%d\t%f\t%f\t%d\t%f\t%f\t%d\t%d\n", object_type, x, y, ani_set_id, from, to, gw, gh);
+
 			break;
 		}
 	default:
@@ -246,6 +274,116 @@ void CPlayScene::_ParseSection_Enemy(string line)
 	DebugOut(L"enemy spaw %f %f %d \n",x,y,ani_set_id);
 }
 
+void CPlayScene::_ParseSection_OBJECTS_GRID(string line)
+{
+	vector<string> tokens = split(line);
+	wstring path = ToWSTR(tokens[0]);
+	ifstream f;
+	f.open(line);
+	char str[MAX_SCENE_LINE];
+	while (f.getline(str, MAX_SCENE_LINE)) {
+		string line(str);
+		vector<string> objectoken = split(line);
+
+		if (objectoken.size() < 3) return; // skip invalid lines - an object set must have at least id, x, y
+
+		int object_type = atoi(objectoken[0].c_str());
+		float x = atof(objectoken[1].c_str());
+		float y = atof(objectoken[2].c_str());
+		int ani_set_id = atoi(objectoken[3].c_str());
+		int gx = 0;
+		int gy = 0;
+
+		CAnimationSets * animation_sets = CAnimationSets::GetInstance();
+
+		CGameObject *obj = NULL;
+
+		switch (object_type)
+		{
+		case OBJECT_TYPE_MARIO:
+			if (player != NULL)
+			{
+				return;
+			}
+			obj = new CSimon();
+			player = (CSimon*)obj;
+			break;
+		case OBJECT_TYPE_LAMP:
+		{
+			float item = atof(objectoken[4].c_str());
+			gx = atof(objectoken[5].c_str());
+			gy = atof(objectoken[6].c_str());
+
+			obj = new Lamp();
+			obj->dropItem = item;
+			break;
+		}
+		case OBJECT_TYPE_BRICK: {
+			obj = new CBrick();
+			 gx = atof(objectoken[4].c_str());
+			 gy = atof(objectoken[5].c_str());
+			break;
+		}
+		case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
+		case OBJECT_TYPE_HEART: obj = new Heart(); break;
+		case OBJECT_TYPE_CANDLE:
+		{
+			float item = atof(objectoken[4].c_str());
+			gx = atof(objectoken[5].c_str());
+			gy = atof(objectoken[6].c_str());
+			obj = new Candle();
+			obj->dropItem = item;
+
+			break;
+		}
+		case OBJECT_TYPE_STAIRS: {
+			float r = atof(objectoken[4].c_str());
+			float b = atof(objectoken[5].c_str());
+			int t = atof(objectoken[6].c_str());
+			gx = atof(objectoken[7].c_str());
+			gy = atof(objectoken[8].c_str());
+			obj = new Stairs(x, y, r, b, t);
+
+			break;
+		}
+		case OBJECT_TYPE_PORTAL:
+		{
+			float r = atof(objectoken[4].c_str());
+			float b = atof(objectoken[5].c_str());
+			int scene_id = atoi(objectoken[6].c_str());
+			gx = atof(objectoken[7].c_str());
+			gy = atof(objectoken[8].c_str());
+			obj = new CPortal(x, y, r, b, scene_id);
+
+		}
+		break;
+		case OBJECT_TYPE_FLOATINGBRICK:
+		{
+			float from = atof(objectoken[4].c_str());
+			float to = atof(objectoken[5].c_str()); 
+			gx = atof(objectoken[6].c_str());
+			gy = atof(objectoken[7].c_str());
+			obj = new FloatingBrick(from, to);
+
+			break;
+		}
+		default:
+			DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
+			return;
+		}
+
+		// General object setup
+		obj->SetPosition(x, y);
+
+		LPANIMATION_SET ani_set = animation_sets->Get(ani_set_id);
+
+		obj->SetAnimationSet(ani_set);
+		if (!dynamic_cast<CSimon *>(obj)) {
+			Grid::GetInstance()->InsertGridNode(obj, gx, gy);
+		}
+	}
+}
+
 void CPlayScene::Load()
 {
 	//setup thông tim player trc
@@ -285,6 +423,9 @@ void CPlayScene::Load()
 		if (line == "[ENEMY]") {
 			EnemySpawn::getInstance()->Clear(player);
 			section = SCENE_SECTION_ENEMY; continue;}
+		if (line == "[OBJECT_GRID]") {
+			section = SCENE_SECTION_OBJECTS_GRID; continue;
+		}
 		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }	
 
 		//
@@ -297,8 +438,9 @@ void CPlayScene::Load()
 			case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
 			case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
 			case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
-			case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
+			//case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
 			case SCENE_SECTION_ENEMY: _ParseSection_Enemy(line); break;
+			case SCENE_SECTION_OBJECTS_GRID: _ParseSection_OBJECTS_GRID(line); break;
 		}
 	}
 	//Khởi tạo Ui
@@ -363,14 +505,18 @@ void CPlayScene::Update(DWORD dt)
 	int mapwidth, mapheight;
 	map->GetMapSize(mapwidth, mapheight);
 	
-	CGame::GetInstance()->SetCamPos2((int)cx, (int)cy  ,mapwidth,mapheight);
+	if(!PlayerStatus::getInstance()->isCamLocked()){
+		CGame::GetInstance()->SetCamPos2((int)cx, (int)cy, mapwidth, mapheight);
+	}
 
 
 	//check player
 	int hp = 0; 
 	PlayerStatus::getInstance()->getPlayerHp(hp);
 	if (player->y > mapheight || hp <= 0) {
-		int state = 0;
+		PlayerStatus::getInstance()->SetHp(0);
+
+		/*int state = 0;
 		int life = 0;
 		PlayerStatus::getInstance()->getStateIndex(state);
 		PlayerStatus::getInstance()->getPlayerLife(life);
@@ -382,7 +528,7 @@ void CPlayScene::Update(DWORD dt)
 		else {
 			CGame::GetInstance()->SwitchScene(10);
 
-		}
+		}*/
 		
 	}
 }
@@ -421,32 +567,48 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	CSimon *simon = ((CPlayScene*)scence)->player;
 	switch (KeyCode)
 	{
-	case DIK_SPACE:
+	case DIK_K:
 		simon->SetState(SIMON_STATE_JUMP);
 		break;
-	case DIK_A: // reset
+	case DIK_Z: // reset
 		simon->SetState(SIMON_STATE_IDLE);
 		simon->SetStatus(SIMON_STA_NOR);
 		simon->SetPosition(100.0f, 0.0f);
 		simon->SetSpeed(0, 0);
 		break;
-	case DIK_C:
+	case DIK_J:
 		simon->SetStatus(SIMON_STA_ATK);
-		if (CGame::GetInstance()->IsKeyDown(DIK_UP)) {
+		if (CGame::GetInstance()->IsKeyDown(DIK_W)) {
 			simon->subatk();
 		}else
 			simon->atk();
 		break;
-	case DIK_V:
+	case DIK_H:
 		simon->SetStatus(SIMON_STA_ATK);
 		simon->subatk();
+		break;
+	case DIK_1:
+		simon->setSubweapon(1);
+		break;
+	case DIK_2:
+		simon->setSubweapon(2);
+		break;
+	case DIK_3:
+		simon->setSubweapon(3);
+		break;
+	case DIK_4:
+		simon->setSubweapon(4);
+		break;
+	case DIK_5:
+		simon->setSubweapon(5);
+		break;
 	}
 }
 
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	CSimon *simon = ((CPlayScene*)scence)->player;
-	if (KeyCode==DIK_DOWN) {
+	if (KeyCode==DIK_S) {
 		simon->SetStatus(SIMON_STA_STANDUP);
 	}
 }
@@ -458,13 +620,13 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 
 	// disable control key when Mario die 
 	if (simon->GetState() == SIMON_STATE_DIE) return;
-	if (game->IsKeyDown(DIK_RIGHT))
+	if (game->IsKeyDown(DIK_D))
 		simon->SetState(SIMON_STATE_WALKING_RIGHT);
-	else if (game->IsKeyDown(DIK_LEFT))
+	else if (game->IsKeyDown(DIK_A))
 		simon->SetState(SIMON_STATE_WALKING_LEFT);
-	else if (game->IsKeyDown(DIK_DOWN))
+	else if (game->IsKeyDown(DIK_S))
 		simon->SetState(SIMON_STATE_DUCK);
-	else if (game->IsKeyDown(DIK_UP))
+	else if (game->IsKeyDown(DIK_W))
 		simon->SetState(SIMON_STATE_CLIMP);
 	else
 		simon->SetState(SIMON_STATE_IDLE);

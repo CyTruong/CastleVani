@@ -4,7 +4,6 @@
 #include "Scence.h"
 #include "GameObject.h"
 #include "Brick.h"
-#include "Mario.h"
 #include "Goomba.h"
 #include "Koopas.h"
 #include "TileMap.h"
@@ -25,6 +24,7 @@ protected:
 	void _ParseSection_ANIMATION_SETS(string line);
 	void _ParseSection_OBJECTS(string line);
 	void _ParseSection_Enemy(string line);
+	void _ParseSection_OBJECTS_GRID(string line);
 public: 
 	CPlayScene(int id, LPCWSTR filePath);
 

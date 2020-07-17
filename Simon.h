@@ -42,8 +42,10 @@
 #define SIMON_ANI_DOWN_WHIP_SUB_RIGHT 17
 #define SIMON_ANI_CLIMP_STAND_LEFT 18
 #define SIMON_ANI_CLIMP_STAND_RIGHT 19
- 
-#define SIMON_ANI_DIE	22
+#define SIMON_ANI_DIE_LEFT 20
+#define SIMON_ANI_DIE_RIGHT 21
+
+
 
 #define	SIMON_STA_NOR	1
 #define SIMON_STA_ATK   2
@@ -96,6 +98,7 @@ public:
 	void SetStatus(int l) { status = l; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 	void atk();
+	void setSubweapon(int weapon) { subweapon->SetWeaponType(weapon); };
 	void getSubweapon(int &sub) { subweapon->GetWeaponType(sub); };
 	void subatk();
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);

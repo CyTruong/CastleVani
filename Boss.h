@@ -7,6 +7,7 @@
 
 #define BOSS_PHARSE_1 1
 #define BOSS_PHARSE_2 2
+
 class Boss : public Enemy
 {
 private:

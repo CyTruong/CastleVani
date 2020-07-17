@@ -19,6 +19,12 @@ Grid::Grid()
 	Col = width;
 }
 
+void Grid::InsertGridNode(LPGAMEOBJECT gobj, int w, int h)
+{
+	Nodes[h][w].arrObj.push_back(gobj);
+
+}
+
 void Grid::Insert(LPGAMEOBJECT gobjs) {
 	int w = (int)(gobjs->x / GRID_WIDTH);
 	int h = (int)(gobjs->y / GRID_HEIGHT);
@@ -31,7 +37,6 @@ void Grid::Push(vector<LPGAMEOBJECT> gobjs) {
 		int w = (int) ( obj->x / GRID_WIDTH ); 
 		int h = (int) ( obj->y / GRID_HEIGHT );
 		Nodes[h][w].arrObj.push_back(obj);
-		DebugOut(L"GRID w h %d %d ",w,h);
 
 	}
 }

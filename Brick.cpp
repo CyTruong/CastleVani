@@ -4,6 +4,10 @@ CBrick::CBrick()
 {
 	collision_able = true;
 	atk_able = false;
+	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
+	LPANIMATION_SET ani_set = animation_sets->Get(22);
+
+	this->SetAnimationSet(ani_set);
 }
 
 void CBrick::Render()

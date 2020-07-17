@@ -251,16 +251,16 @@ void CEndScenceKeyHandler::OnKeyDown(int KeyCode)
 	int option = ((EndScene*)scence)->section;
 	switch (KeyCode)
 	{
-	case DIK_UP:
+	case DIK_W:
 		cursor->SetPosition(58, 122);
 		((EndScene*)scence)->section = 1;
 		break;
-	case DIK_DOWN:
+	case DIK_S:
 		 cursor = ((EndScene*)scence)->objects.at(1);
 		cursor->SetPosition(58, 148);
 		((EndScene*)scence)->section = 2;
 		break;
-	case DIK_C:
+	case DIK_J:
 		
 		if (option==1) {
 			int scene;

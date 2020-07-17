@@ -1,6 +1,9 @@
 ﻿#include "Boss.h"
 #include "PlayerStatus.h"
-
+#include "Game.h"
+#include "Brick.h"
+#include "Grid.h"
+#include "ItemSpaw.h"
 
 Boss::Boss()
 {
@@ -26,7 +29,7 @@ void Boss::GetBoundingBox(float & left, float & top, float & right, float & bott
 void Boss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	//DebugOut(L"this - player %f %f - %f %f \n",this->x,this->y,player->x,player->y);
-	if (this->x < player->x && start == false) {
+	if (this->x+30 < player->x && start == false) {
 		start = true;
 		LastPx = player->x;
 		LastPy = player->y;
@@ -78,12 +81,24 @@ void Boss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		else {
 			canchangepharse = true;
 		}
-	
+
+		if (!PlayerStatus::getInstance()->isCamLocked()) {
+			PlayerStatus::getInstance()->LockCamBoss();
+			CBrick* brick = new CBrick();
+			brick->SetPosition(575, 224);
+			Grid::GetInstance()->Insert(brick);
+		}
+		CGame::GetInstance()->SetCamPos2(575, 36.8f, 768, 240);
+
 	}
 	
 	CGameObject::Update(dt, coObjects);
 	x += dx;
 	y += dy;
+
+	if (state == OBJ_DIE) {
+		PlayerStatus::getInstance()->UnLockCamBoss();
+	}
 
 }
 
@@ -106,6 +121,8 @@ bool Boss::minusHp(int dam)
 	Hp = Hp - dam;
 	PlayerStatus::getInstance()->SetEnemyHp(Hp);
 	if (Hp <= 0) {
+		ItemSpaw::getInstance()->CreateObj(this->x,this->y, 8);
+
 		return true;
 	}
 	return false;

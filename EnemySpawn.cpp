@@ -58,6 +58,18 @@ EnemySpawn::EnemySpawn()
 	bone->player = player;
 	enemypoll[SkeletonBoneIndex * 1000] = bone;
 	enemypoll[SkeletonBoneIndex * 1000]->isFree = true;
+
+	enemypollIndex[RavenIndex * 1000] = 1;
+	dRaven* dr = new dRaven();
+	dr->player = player;
+	enemypoll[RavenIndex * 1000] = dr;
+	enemypoll[RavenIndex * 1000]->isFree = true;
+
+	enemypollIndex[MonkeyIndex * 1000] = 1;
+	Monkey* mk = new Monkey();
+	mk->player = player;
+	enemypoll[MonkeyIndex * 1000] = mk;
+	enemypoll[MonkeyIndex * 1000]->isFree = true;
 }
 
 void EnemySpawn::Clear(LPGAMEOBJECT player)
@@ -109,6 +121,18 @@ void EnemySpawn::Clear(LPGAMEOBJECT player)
 	bone->player = player;
 	enemypoll[SkeletonBoneIndex * 1000] = bone;
 	enemypoll[SkeletonBoneIndex * 1000]->isFree = true;
+
+	enemypollIndex[RavenIndex * 1000] = 1;
+	dRaven* dr = new dRaven();
+	dr->player = player;
+	enemypoll[RavenIndex * 1000] = dr;
+	enemypoll[RavenIndex * 1000]->isFree = true;
+
+	enemypollIndex[MonkeyIndex * 1000] = 1;
+	Monkey* mk = new Monkey();
+	mk->player = player;
+	enemypoll[MonkeyIndex * 1000] = mk;
+	enemypoll[MonkeyIndex * 1000]->isFree = true;
 }
 
 void EnemySpawn::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -195,6 +219,14 @@ Enemy* EnemySpawn::getEnemy(int type,float x,float y) {
 	}
 	if (type == SkeletonBoneIndex) {
 		enemy = new SkeletonBone();
+		enemy->player = this->player;
+	}
+	if (type == RavenIndex) {
+		enemy = new dRaven();
+		enemy->player = this->player;
+	}
+	if (type == MonkeyIndex) {
+		enemy = new Monkey();
 		enemy->player = this->player;
 	}
 	enemy->isFree = false;

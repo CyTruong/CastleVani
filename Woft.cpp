@@ -111,6 +111,9 @@ void Woft::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 		//DebugOut(L"dis %f vx %f state %d  \n", abs(player->x - this->x), vx,state);
 
+		if (vx == 0) {
+			dir = -dir;
+		}
 		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
 		//DebugOut(L"state %d \n",state);

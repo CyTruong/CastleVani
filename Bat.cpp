@@ -8,9 +8,7 @@ Bat::Bat()
 	dirY = 0;
 	pVectorX = 0;
 	pVectorY = 0;
-	circleY = 0;
-	timer = 0;
-	Y_down = true;
+
 }
 
 void Bat::GetBoundingBox(float & left, float & top, float & right, float & bottom)
@@ -26,7 +24,7 @@ void Bat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (!PlayerStatus::getInstance()->isZAWARUDO()) {
 		if (pVectorX == 0 && pVectorY == 0) {
 			float dis = sqrt((player->x - this->x)*(player->x - this->x) + (player->y - this->y)*(player->y - this->y));
-			if (dis < 80) {
+			if (dis < 90) {
 				pVectorX = player->x - this->x;
 				pVectorY = player->y+10 - this->y;
 				if (player->x < this->x) {
@@ -35,29 +33,11 @@ void Bat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else
 					vx = 0.02;
 
-				timer = 1600;
 			}
 		}
 		else {
 
-			timer = timer + dt;
-			if (timer > 200) {
-				timer = 0;
-				if (Y_down) {
-					circleY = circleY + 30;
-					if (circleY >= 90) {
-						Y_down = false;
-					}
-				}
-				else {
-					circleY = circleY - 30;
-					if (circleY <= -90) {
-						Y_down = true;
-					}
-				}
-				DebugOut(L"new ydown %d ", circleY);
-			}
-
+			
 			
 
 			this->dirX = (this->pVectorX + this->pVectorX) / 2;
@@ -71,22 +51,9 @@ void Bat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 			this->vy = dirY * this->vx / dirX;
 
-			if (abs(vy) > BAT_SPEED*1.5) {
-				if (vy < 0) {
-					vy = -BAT_SPEED;
-				}
-				if (vy > 0) {
-					vy = BAT_SPEED;
-				}
-			}
-			if (Y_down == 1) {
-				vy +=  BAT_SPEED*1.2;
-			}
-			else
-			{
-				vy -=   BAT_SPEED*1.2;
-			}
-			DebugOut(L"Bat %d  circleY %d dir X %f dir Y %f \n",timer,circleY, dirX, dirY);
+			
+		
+			//DebugOut(L"Bat %d  circleY %d dir X %f dir Y %f \n",timer,circleY, dirX, dirY);
 		}
 		CGameObject::Update(dt, coObjects);
 		x += dx;

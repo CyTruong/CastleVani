@@ -1,6 +1,6 @@
 #pragma once
 #include "Enemy.h"
-#define BAT_SPEED 0.04f
+#define BAT_SPEED 0.06f
 #define BAT_BBOX_WIDTH 16
 #define BAT_BBOX_HEIGHT 12
 #define BAT_ANI_IDLE 0
@@ -12,9 +12,6 @@ class Bat : public Enemy
 private:
 	float dirX, dirY;
 	float pVectorX, pVectorY;
-	int circleY;
-	bool Y_down;
-	long timer;
 public:
 	Bat();
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);

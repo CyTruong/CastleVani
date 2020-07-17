@@ -21,6 +21,7 @@ private:
 public:
 	static Grid* GetInstance();
 	Grid();
+	void InsertGridNode(LPGAMEOBJECT gobj, int w, int h);
 	void Insert(LPGAMEOBJECT gobj);
 	void Push(vector<LPGAMEOBJECT> gobjs);
 	vector<LPGAMEOBJECT> Get();

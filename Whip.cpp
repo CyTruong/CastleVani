@@ -75,7 +75,7 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 					if (!(b < wt || t > wb)) {
 						
 						coObjects->at(i)->SetState(OBJ_DIE);
-						ItemSpaw::getInstance()->CreateObj(coObjects->at(i)->x, coObjects->at(i)->y);
+						ItemSpaw::getInstance()->CreateObj(coObjects->at(i)->x, coObjects->at(i)->y,coObjects->at(i)->dropItem);
 					}
 				}
 			}	
@@ -95,6 +95,7 @@ void Whip::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 							if (enemy->minusHp(1)) {
 								enemys->at(i)->SetState(OBJ_DIE);
 								PlayerStatus::getInstance()->increaseScore(100);
+										
 							}
 							//	ItemSpaw::getInstance()->CreateObj(coObjects->at(i)->x, coObjects->at(i)->y-20);
 						}

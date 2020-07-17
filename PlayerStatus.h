@@ -12,6 +12,7 @@ private:
 	int EnemyHp;
 	int PlayerLife;
 	bool ZA_WARUDO;
+	bool BossCamLock;
 public:
 	static PlayerStatus* getInstance();
 	PlayerStatus();
@@ -32,6 +33,7 @@ public:
 	}
 	bool isZAWARUDO() { return ZA_WARUDO; }
 	void SubHp(int minusHp) { this->PlayerHp -= minusHp; }
+	void SetHp(int hp) { this->PlayerHp = hp; }
 	void IncreaseMana(int mana) { this->PlayerMana += mana; }
 	void SubMana(int minuMana) { this->PlayerMana -= minuMana;  }
 	void SetSubWeapon(int subwp) { 
@@ -47,6 +49,16 @@ public:
 	void SetPlayerLife(int life) { this->PlayerLife = life; }
 	void ZAWARUDO(bool tokkitomare) { 
 		this->ZA_WARUDO = tokkitomare;
+	}
+
+	void LockCamBoss() {
+		BossCamLock = true;
+	}
+	void UnLockCamBoss() {
+		BossCamLock = false;
+	}
+	bool isCamLocked() {
+		return BossCamLock;
 	}
 	~PlayerStatus();
 };

@@ -24,7 +24,7 @@ void Knight::GetBoundingBox(float & left, float & top, float & right, float & bo
 void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (!PlayerStatus::getInstance()->isZAWARUDO()) {
-		if (abs(player->x - this->x) < 95 && !start) {
+		if (abs(player->x - this->x) < 125 && !start) {
 			start = true;
 			state = KNIGHT_STATE_RUN;
 			if (player->x < this->x) {
@@ -50,48 +50,57 @@ void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				this->vx = KNIGHT_SPEED;
 			}
 
-		}
-		//DebugOut(L"Knight dir %d \n",dir);
+			//DebugOut(L"Knight dir %d \n",dir);
 
 		// Calculate dx, dy 
-		CGameObject::Update(dt);
-		// Simple fall down
-		vy += KNIGHT_GRAVITY * dt;
+			CGameObject::Update(dt);
+			// Simple fall down
+			vy += KNIGHT_GRAVITY * dt;
 
-		vector<LPCOLLISIONEVENT> coEvents;
-		vector<LPCOLLISIONEVENT> coEventsResult;
+			vector<LPCOLLISIONEVENT> coEvents;
+			vector<LPCOLLISIONEVENT> coEventsResult;
 
-		coEvents.clear();
+			coEvents.clear();
 
-		if (state != OBJ_DIE)
-			CalcPotentialCollisions(coObjects, coEvents);
+			if (state != OBJ_DIE)
+				CalcPotentialCollisions(coObjects, coEvents);
 
 
 
-		if (coEvents.size() == 0)
-		{
-			x += dx;
-			y += dy;
+			if (coEvents.size() == 0)
+			{
+				x += dx;
+				y += dy;
+			}
+			else
+			{
+				state = KNIGHT_STATE_RUN;
+
+				float min_tx, min_ty, nx = 0, ny;
+				float rdx = 0;
+				float rdy = 0;
+
+				FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+
+				x += min_tx * dx + nx * 0.4f;
+				y += min_ty * dy + ny * 0.4f;
+
+				if (nx != 0) vx = 0;
+				if (ny != 0) vy = 0;
+
+
+			}
+			if (vx == 0) {
+				dir = -dir;
+			}
+			for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+
+			//DebugOut(L"Knight speed %f \n", vx);
+			DebugOut(L"Knight position %f %f \n", x, y);
+
+
 		}
-		else
-		{
-			state = KNIGHT_STATE_RUN;
-
-			float min_tx, min_ty, nx = 0, ny;
-			float rdx = 0;
-			float rdy = 0;
-
-			FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
-
-			x += min_tx * dx + nx * 0.4f;
-			y += min_ty * dy + ny * 0.4f;
-
-			if (nx != 0) vx = 0;
-			if (ny != 0) vy = 0;
-
-
-		}
-		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+		
 	}
 
 }

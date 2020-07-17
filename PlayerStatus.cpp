@@ -22,7 +22,8 @@ PlayerStatus::PlayerStatus()
 	EnemyHp = 16;
 	StateIndex = 1;
 	ZA_WARUDO = false;
-	PlayerLife = 0;
+	PlayerLife = 3;
+	BossCamLock = false;
 }
 
 void PlayerStatus::Renew()
@@ -35,15 +36,16 @@ void PlayerStatus::Renew()
 	EnemyHp = 16;
 	StateIndex = 1;
 	ZA_WARUDO = false;
-	PlayerLife = 0;
+	PlayerLife = 3;
+	BossCamLock = false;
 }
 
 void PlayerStatus::Reset()
 {
+	BossCamLock = false;
 	PlayerHp = 10;
 	PlayerMana = 0;
 	SubWeaponIndex = 0;
-	Score = 0;
 	Whipslevel = 0;
 	EnemyHp = 16;
 	ZA_WARUDO = false;

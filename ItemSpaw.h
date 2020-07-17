@@ -11,7 +11,8 @@
 #include "AxePicker.h"
 #include "BoomerangPicker.h"
 #include "TimestopPicker.h"
-
+#include "HeartMini.h"
+#include "BossOrb.h"
 #define ITEM_HEART 0
 #define ITEM_WHIP_UPDATE 1
 #define ITEM_SUB_WEAPON_1 2 //dagger
@@ -19,7 +20,9 @@
 #define ITEM_SUB_WEAPON_3 4 //axe
 #define ITEM_SUB_WEAPON_4 5 // bmr
 #define ITEM_SUB_WEAPON_5 6	// zaaaaaa waaaaa rruuuuu doooooo
-#define ITEM_COUNT 7
+#define ITEM_HEART_MINI	7
+#define ITEM_BOSS_ORB 8
+#define ITEM_COUNT 9
 
 class ItemSpaw
 {
@@ -27,7 +30,7 @@ private: static  ItemSpaw* __instance;
 public:
 	static ItemSpaw* getInstance();
 	ItemSpaw();
-	LPGAMEOBJECT CreateObj(int x, int y);
+	LPGAMEOBJECT CreateObj(int x, int y,int itemindex = -1);
 	~ItemSpaw();
 };
 
