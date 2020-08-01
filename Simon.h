@@ -75,16 +75,19 @@ class CSimon : public CGameObject
 	int isJump;
 	Whip* whip;
 	SubWeapon* subweapon;
-	Stairs* cauthang;
 	StairStep* demcauthang;
 	bool isCauthang;
 	bool isducking;
+	long jumptimer;
+public:
+	Stairs* cauthang;
 public:
 	CSimon() : CGameObject()
 	{
 		status = SIMON_STA_NOR;
 		onAir = 0;
 		isJump = 0;
+		jumptimer = 0;
 		cauthang = NULL;
 		untouchable = 0;
 		isCauthang = false;

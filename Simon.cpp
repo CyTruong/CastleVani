@@ -26,7 +26,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
-
+	jumptimer += dt;
 	// Simple fall down
 	if (state != SIMON_STATE_CLIMP) {
 		vy += SIMON_GRAVITY * dt;
@@ -48,6 +48,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		untouchable = 0;
 	}
 
+
 	#pragma region Simon duck
 	if (state == SIMON_STATE_DUCK && cauthang != NULL) {
 		this->state = SIMON_STATE_CLIMP;
@@ -56,6 +57,11 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	#pragma endregion
 
 	#pragma region Simon climp 
+
+	if (untouchable && state == SIMON_STATE_CLIMP) {
+		vx = 0;
+		vy = 0;
+	}
 
 	// Kiểm tra xem có đi ra  khỏi cầu thang chưa
 	if (cauthang != NULL) {
@@ -72,18 +78,17 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			{	//ra khỏi cầu thang
 				if (y + SIMON_BIG_BBOX_HEIGHT < cauthang->y) {
 					cauthang = NULL;
-					vy = 0;
-					y = y - 5;
-					state = SIMON_STATE_WALKING_LEFT;
+					vy = SIMON_GRAVITY*dt;
+					vx = 0;
+					y = y - 3;
 					DebugOut(L"Ra khỏi cầu thang 2\n");
-
 				}
 				else
 					if (y + SIMON_BIG_BBOX_HEIGHT > cauthang->y + cauthang->height) {
 						cauthang = NULL;
-						vy = 0;
-						y = y - 5;
-						state = SIMON_STATE_WALKING_LEFT;
+						vy = SIMON_GRAVITY*dt;
+						vx = 0;
+						y = y - 3;
 						DebugOut(L"Ra khỏi cầu thang 2\n");
 					}
 			}
@@ -102,16 +107,18 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{	//ra khỏi cầu thang
 					if (y + SIMON_BIG_BBOX_HEIGHT < cauthang->y) {
 						cauthang = NULL;
-						vy = 0;
-						y = y - 2;
+						vy = SIMON_GRAVITY * dt ;
+						vx = 0;
+						y = y - 3;
 						DebugOut(L"Ra khỏi cầu thang 21\n");
 
 					}
 					else
 						if (y + SIMON_BIG_BBOX_HEIGHT > cauthang->y + cauthang->height) {
 							cauthang = NULL;
-							y = y - 2;
-							vy = 0;
+							y = y - 3;
+							vx = 0;
+							vy = SIMON_GRAVITY * dt;
 							DebugOut(L"Ra khỏi cầu thang 21\n");
 						}
 				}
@@ -292,7 +299,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			else
 				if (dynamic_cast<FloatingBrick*>(e->obj)) {
 					if (abs(this->vx) < abs(e->obj->vx)) {
-						this->x += e->obj->dx * 2; //x2 bec uda 2times
+						this->x += e->obj->dx * 2.5; //x2 bec uda 2times
 					}
 
 				}
@@ -398,7 +405,9 @@ void CSimon::atk() {
 			}
 		}
 		/*whip->atk(WHIP_DIR_LEFT);*/
-		vx = 0;
+		if (!isJump) {
+			vx = 0;
+		}
 	}
 }
 
@@ -653,84 +662,102 @@ void CSimon::Render()
 
 void CSimon::SetState(int state)
 {
+	if (!untouchable) {
+		switch (state)
+		{
+		case SIMON_STATE_WALKING_RIGHT:
+			if (this->state == SIMON_STATE_DUCK) {
+				state = SIMON_STATE_DUCK;
+				break;
+			}
+			if (this->state == SIMON_STATE_CLIMP) {
+				state = SIMON_STATE_CLIMP;
+				if (this->cauthang != NULL) {
+					if (cauthang->type == STAIRS_R2L) {
+						vy = 0.02f;
+					}
+					if (cauthang->type == STAIRS_L2R) {
+						vy = -0.02f;
+					}
+				}
+				break;
+			}
+			if (!whip->isAtk) {
+				vx = SIMON_WALKING_SPEED;
+				nx = 1;
+			}
 
-	switch (state)
-	{
-	case SIMON_STATE_WALKING_RIGHT:
-		if (this->state == SIMON_STATE_CLIMP) {
-			state = SIMON_STATE_CLIMP;
-			if (this->cauthang!=NULL) {
-				if (cauthang->type == STAIRS_R2L) {
-					vy = 0.02f;
-				}
-				if (cauthang->type == STAIRS_L2R) {
-					vy = -0.02f;
+			break;
+		case SIMON_STATE_WALKING_LEFT:
+			if (this->state == SIMON_STATE_DUCK) {
+				state = SIMON_STATE_DUCK;
+				break;
+			}
+			if (this->state == SIMON_STATE_CLIMP) {
+				state = SIMON_STATE_CLIMP;
+				if (this->cauthang != NULL) {
+					if (cauthang->type == STAIRS_L2R) {
+						vy = 0.02f;
+					}
+					if (cauthang->type == STAIRS_R2L) {
+						vy = -0.02f;
+					}
 				}
 			}
+			if (!whip->isAtk) {
+				vx = -SIMON_WALKING_SPEED;
+				nx = -1;
+			}
+
 			break;
+		case SIMON_STATE_JUMP:
+		{
+			if (isJump == 0 && jumptimer > 500) {
+				jumptimer = 0;
+				vy = -SIMON_JUMP_SPEED_Y;
+				isJump = 1;
+				break;
+			}
+			else
+				break;
 		}
-		if (!whip->isAtk) {
-			vx = SIMON_WALKING_SPEED;
-			nx = 1;
-		}
-	
-		break;
-	case SIMON_STATE_WALKING_LEFT:
-		if (this->state == SIMON_STATE_CLIMP) {
-			state = SIMON_STATE_CLIMP;
-			if (this->cauthang != NULL) {
-				if (cauthang->type==STAIRS_L2R) {
-					vy = 0.02f;
-				}
-				if (cauthang->type == STAIRS_R2L) {
+
+		case SIMON_STATE_CLIMP:
+			//nếu có cầu thang
+			if (!isJump) {
+				if (this->cauthang != NULL) {
 					vy = -0.02f;
 				}
+				else {
+					//state = SIMON_STATE_IDLE;
+
+				}
 			}
-		}
-		if (!whip->isAtk) {
-			vx = -SIMON_WALKING_SPEED;
-			nx = -1;
-		}
-	
-		break;
-	case SIMON_STATE_JUMP:
-	{
-		if (isJump==0) {
-			vy = -SIMON_JUMP_SPEED_Y;
-			isJump = 1;
+			else
+				state = SIMON_STATE_JUMP;
+			break;
+		case SIMON_STATE_IDLE:
+			if (this->state == SIMON_STATE_CLIMP && this->cauthang != NULL) {
+				this->vx = 0;
+				this->vy = 0;
+				state = SIMON_STATE_CLIMP;
+			}
+			vx = 0;
+			break;
+		case SIMON_STATE_DUCK:
+			//vy = 0.02f;
+			break;
+		case SIMON_STATE_DIE:
+			vy = 0;
+			vx = 0;
 			break;
 		}
-		else
-			break;
+		CGameObject::SetState(state);
+
 	}
-	
-	case SIMON_STATE_CLIMP:
-		//nếu có cầu thang
-		if (this->cauthang != NULL) {
-			vy = -0.02f;
-		}
-		else {
-			//state = SIMON_STATE_IDLE;
-			
-		}
-		break;
-	case SIMON_STATE_IDLE:
-		if (this->state== SIMON_STATE_CLIMP && this->cauthang != NULL) {
-			this->vx = 0;
-			this->vy = 0;
-			state = SIMON_STATE_CLIMP;
-		}
-		vx = 0;
-		break;
-	case SIMON_STATE_DUCK:
-		//vy = 0.02f;
-		break;
-	case SIMON_STATE_DIE:
-		vy = 0;
-		vx = 0;
-		break;
+	else {
+		
 	}
-	CGameObject::SetState(state);
 
 }
 

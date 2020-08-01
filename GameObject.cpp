@@ -94,7 +94,7 @@ void CGameObject::CalcPotentialCollisions(
 				continue;
 			}
 		}
-		if (ExceptItem) {
+		if (ExceptOrtherObj) {
 			if (dynamic_cast<Candle*>(coObjects->at(i))) {
 				continue;
 			}
@@ -176,7 +176,7 @@ void CGameObject::RenderBoundingBox()
 	rect.right = (int)r - (int)l;
 	rect.bottom = (int)b - (int)t;
 
-	CGame::GetInstance()->Draw(l, t, bbox, rect.left, rect.top, rect.right, rect.bottom, 80);
+	CGame::GetInstance()->Draw(l, t, bbox, rect.left, rect.top, rect.right, rect.bottom, 0);
 }
 
 

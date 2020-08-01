@@ -16,6 +16,7 @@ EnemySpawn::EnemySpawn()
 	enemypollIndex[ZombieIndex * 1000] = 1;
 	enemypoll[ZombieIndex * 1000] = new Zombie();
 	enemypoll[ZombieIndex * 1000]->isFree = true;
+	enemypoll[ZombieIndex * 1000]->player = player;
 
 	enemypollIndex[BatIndex * 1000] = 1;
 	Bat* bat = new Bat();
@@ -79,6 +80,7 @@ void EnemySpawn::Clear(LPGAMEOBJECT player)
 	enemypollIndex[ZombieIndex * 1000] = 1;
 	enemypoll[ZombieIndex * 1000] = new Zombie();
 	enemypoll[ZombieIndex * 1000]->isFree = true;
+	enemypoll[ZombieIndex * 1000]->player = player;
 
 	enemypollIndex[BatIndex * 1000] = 1;
 	Bat* bat = new Bat();
@@ -192,6 +194,8 @@ Enemy* EnemySpawn::getEnemy(int type,float x,float y) {
 	Enemy* enemy = new Zombie();
 	if (type == ZombieIndex) {
 		enemy = new Zombie();
+		enemy->player = this->player;
+
 	}
 	if (type == BatIndex) {
 		enemy = new Bat();

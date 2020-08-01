@@ -21,6 +21,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 	CScene(id, filePath)
 {
 	key_handler = new CPlayScenceKeyHandler(this);
+	isSimonOnstair = 0;
 }
 
 /*
@@ -38,7 +39,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define SCENE_SECTION_ENEMY 8
 #define SCENE_SECTION_OBJECTS_GRID 9
 
-#define OBJECT_TYPE_MARIO	0
+#define OBJECT_TYPE_SIMON	0
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_LAMP	2
 #define OBJECT_TYPE_KOOPAS	3
@@ -172,7 +173,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	switch (object_type)
 	{
-	case OBJECT_TYPE_MARIO:
+	case OBJECT_TYPE_SIMON:
 		if (player!=NULL) 
 		{
 			DebugOut(L"[ERROR] MARIO object was created before! ");
@@ -196,7 +197,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"%d\t%f\t%f\t%d\t%d\t%d\n", object_type, x, y, ani_set_id, gw, gh);
 		break;
 	}
-	case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
 	case OBJECT_TYPE_HEART: obj = new Heart(); break;
 	case OBJECT_TYPE_CANDLE:
 		{
@@ -300,11 +300,12 @@ void CPlayScene::_ParseSection_OBJECTS_GRID(string line)
 
 		switch (object_type)
 		{
-		case OBJECT_TYPE_MARIO:
+		case OBJECT_TYPE_SIMON:
 			if (player != NULL)
 			{
 				return;
 			}
+			this->isSimonOnstair = atof(objectoken[4].c_str());
 			obj = new CSimon();
 			player = (CSimon*)obj;
 			break;
@@ -324,7 +325,6 @@ void CPlayScene::_ParseSection_OBJECTS_GRID(string line)
 			 gy = atof(objectoken[5].c_str());
 			break;
 		}
-		case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
 		case OBJECT_TYPE_HEART: obj = new Heart(); break;
 		case OBJECT_TYPE_CANDLE:
 		{
@@ -362,6 +362,12 @@ void CPlayScene::_ParseSection_OBJECTS_GRID(string line)
 				//Grid::GetInstance()->InsertGridNode(step2, gx, gy);
 			}
 			
+			if (this->isSimonOnstair == 1) {
+				if (player->cauthang==NULL) {
+					this->player->cauthang = dynamic_cast<Stairs*>(obj);
+					player->SetState(SIMON_STATE_CLIMP);
+				}
+			}
 			break;
 		}
 		case OBJECT_TYPE_PORTAL:
@@ -456,7 +462,7 @@ void CPlayScene::Load()
 			case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
 			case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
 			case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
-			//case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
+			case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
 			case SCENE_SECTION_ENEMY: _ParseSection_Enemy(line); break;
 			case SCENE_SECTION_OBJECTS_GRID: _ParseSection_OBJECTS_GRID(line); break;
 		}
@@ -536,8 +542,6 @@ void CPlayScene::Update(DWORD dt)
 	PlayerStatus::getInstance()->getPlayerHp(hp);
 	if (player->y > mapheight || hp <= 0) {
 		PlayerStatus::getInstance()->SetHp(0);
-
-
 	}
 }
 
@@ -631,7 +635,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		CGame::GetInstance()->SwitchScene(6);
 		break;
 	case DIK_SPACE:
-		PlayerStatus::getInstance()->SetHp(10);
+		PlayerStatus::getInstance()->SetHp(16);
 		break;
 	}
 }

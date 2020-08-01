@@ -147,9 +147,6 @@
     <ClCompile Include="EnemySpawn.cpp">
       <Filter>Source Files\GameComponents</Filter>
     </ClCompile>
-    <ClCompile Include="Goomba.cpp">
-      <Filter>Source Files\Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="ItemSpaw.cpp">
       <Filter>Source Files\Items</Filter>
     </ClCompile>
@@ -162,9 +159,6 @@
     <ClCompile Include="PlayerStatus.cpp">
       <Filter>Source Files\GameComponents</Filter>
     </ClCompile>
-    <ClCompile Include="Koopas.cpp">
-      <Filter>Source Files\Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="SubWeapon.cpp">
       <Filter>Source Files\Weapon</Filter>
     </ClCompile>
@@ -173,9 +167,6 @@
     </ClCompile>
     <ClCompile Include="Ghost.cpp">
       <Filter>Source Files\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="FloatingBrick.cpp">
-      <Filter>Source Files\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="TimestopPicker.cpp">
       <Filter>Source Files\Weapon</Filter>
@@ -233,6 +224,9 @@
     </ClCompile>
     <ClCompile Include="DestroyEffect.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FloatingBrick.cpp">
+      <Filter>Source Files\Obj</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

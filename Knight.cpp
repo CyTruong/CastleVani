@@ -66,7 +66,7 @@ void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			coEvents.clear();
 
 			if (state != OBJ_DIE)
-				CalcPotentialCollisions(coObjects, coEvents,true);
+				CalcPotentialCollisions(coObjects, coEvents,true,true);
 
 
 
@@ -136,7 +136,7 @@ void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 
 			if (!havebrick || isblocked) {
-				DebugOut(L"Chống lọt hố quay xe %d \n",dt);
+				DebugOut(L"Chống lọt hố quay xe %d %d \n",dir,dt);
 				dir = -dir;
 			}
 			//DebugOut(L"Knight speed %f \n", vx);

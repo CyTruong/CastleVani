@@ -2,10 +2,13 @@
 #texture_id map_width map_height map_file titleset_width titleset_height 
 46	49	15	textures\titleset4_bg.txt	16	6
 # id	left	top	right	bottom	alphaX	alphaY	texture_id
+[OBJECTS]
 [OBJECT_GRID]
 scene6_grid.txt
 [ENEMY]
 5	598	80	29
-1	270	177	3
-1	340	177	3
-1	400	177	3
+1	270	170	3
+1	340	170	3
+1	400	170	3
+1	240	83	3
+1	260	83	3

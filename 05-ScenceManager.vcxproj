@@ -157,7 +157,6 @@
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="ItemSpaw.cpp" />
     <ClCompile Include="Knight.cpp" />
-    <ClCompile Include="Koopas.cpp" />
     <ClCompile Include="Lamp.cpp" />
     <ClCompile Include="MoneyBag.cpp" />
     <ClCompile Include="Monkey.cpp" />
@@ -177,7 +176,6 @@
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PlayScence.cpp" />
     <ClCompile Include="Scence.cpp" />

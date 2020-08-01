@@ -33,7 +33,7 @@ void HolyWater::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vector<LPCOLLISIONEVENT> coEvents;
 		coEvents.clear();
 
-		CalcPotentialCollisions(coObjects, coEvents);
+		CalcPotentialCollisions(coObjects, coEvents,false,true);
 		if (coEvents.size() == 0)
 		{
 			x += dx;

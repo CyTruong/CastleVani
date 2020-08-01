@@ -4,8 +4,6 @@
 #include "Scence.h"
 #include "GameObject.h"
 #include "Brick.h"
-#include "Goomba.h"
-#include "Koopas.h"
 #include "TileMap.h"
 #include "Simon.h"
 #include "UI.h"
@@ -13,8 +11,10 @@
 #include "DestroyEffect.h"
 class CPlayScene: public CScene
 {
+private :
+	int isSimonOnstair;
 protected: 
-	CSimon *player;					// A play scene has to have player, right? 
+	CSimon *player;					
 	TileMap *map;
 	vector<LPGAMEOBJECT> objects;
 	HitEffect* hiteff;
