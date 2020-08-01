@@ -1,4 +1,4 @@
-#include "Stairs.h"
+﻿#include "Stairs.h"
 
 
 Stairs::Stairs(float l, float t, float r, float b,int type)
@@ -48,35 +48,49 @@ void Stairs::GetBoundingBox(float & l, float & t, float & r, float & b)
 	b = y + height;
 }
 
-void Stairs::GetStaireVector(float vy, float & dx, float & dy)
+void Stairs::GetStaireVector(float SimonX, float SimonY,float& vx, float& vy, float & dx, float & dy)
 {
 	float l, t, r, b;
 	GetBoundingBox(l,t,r,b);
+
+
 	if (vy == 0) {
+		vx = 0;
+		vy = 0;
 		dx = 0;
 		dy = 0;
 		return;
 	}
-	if (type==STAIRS_L2R) {
+	//speed = 0.05 * cos45
+	if (type == STAIRS_L2R) {
 		if (vy > 0) {
-			dy = 0.05f;
-			dx =  (l -r )*dy / ( b - t);
+			dy = 0.03f;
+			dx = (l - r)*dy / (b - t);
 		}
 		if (vy < 0) {
-			dy = -0.05;
-			dx = (r - l )*dy / (t - b);
+			dy = -0.03;
+			dx = (r - l)*dy / (t - b);
 		}
 	}
-	if (type==STAIRS_R2L) {
+	if (type == STAIRS_R2L) {
 		if (vy > 0) {
-			dy = 0.05f;
-			dx = (r - l)*dy / (b-t);
+			dy = 0.03f;
+			dx = (r - l)*dy / (b - t);
 		}
 		if (vy < 0) {
-			dy = -0.05f;
-			dx = (l - r)*dy / (t-b);
+			dy = -0.03f;
+			dx = (l - r)*dy / (t - b);
 		}
 	}
+	
+	if (dx > 0) {
+		vx = 0.05;
+	}
+	else {
+		vx = -0.05f;
+	}
+	vy = (dy / dx)*vx;
+	
 
 }
 

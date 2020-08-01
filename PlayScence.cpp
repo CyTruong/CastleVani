@@ -14,7 +14,7 @@
 #include "Stairs.h"
 #include "Candle.h"
 #include "FloatingBrick.h"
-
+#include "StairStep.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath):
@@ -343,7 +343,25 @@ void CPlayScene::_ParseSection_OBJECTS_GRID(string line)
 			gx = atof(objectoken[7].c_str());
 			gy = atof(objectoken[8].c_str());
 			obj = new Stairs(x, y, r, b, t);
-
+			float haftW = 20;
+			float hight = 20;
+			if (t == STAIRS_L2R) {
+				StairStep *step = new StairStep(x - haftW -5, b - hight, x + haftW -5, b);
+				//StairStep *step2 = new StairStep(r - haftW, y - hight, r + haftW, y + 5);
+				step->Stair = obj;
+				//step2->Stair = obj;
+				Grid::GetInstance()->InsertGridNode(step, gx, gy);
+				//Grid::GetInstance()->InsertGridNode(step2, gx, gy);
+			}
+			if (t == STAIRS_R2L) {
+				StairStep *step = new StairStep(r - haftW+5, b - hight, r + haftW +5, b);
+				//StairStep *step2 = new StairStep(x- haftW, y -hight, x + haftW, y + 5);
+				step->Stair = obj;
+				//step2->Stair = obj;
+				Grid::GetInstance()->InsertGridNode(step, gx, gy);
+				//Grid::GetInstance()->InsertGridNode(step2, gx, gy);
+			}
+			
 			break;
 		}
 		case OBJECT_TYPE_PORTAL:
@@ -447,6 +465,8 @@ void CPlayScene::Load()
 
 	ui = new UI(hp, mana, 3, 1);
 	ui->Initialize();
+	hiteff = new HitEffect();
+	deseff = new DestroyEffect();
 	map->LoadTileSet();
 	Grid::GetInstance()->Push(objects);
 	f.close();
@@ -490,7 +510,8 @@ void CPlayScene::Update(DWORD dt)
 		
 	}
 	player->Update(dt, &coObjects);
-
+	hiteff->Update(dt, &coObjects);
+	deseff->Update(dt, &coObjects);
 	EnemySpawn::getInstance()->Update(dt, &coObjects);
 
 	// Update camera to follow mario
@@ -516,20 +537,7 @@ void CPlayScene::Update(DWORD dt)
 	if (player->y > mapheight || hp <= 0) {
 		PlayerStatus::getInstance()->SetHp(0);
 
-		/*int state = 0;
-		int life = 0;
-		PlayerStatus::getInstance()->getStateIndex(state);
-		PlayerStatus::getInstance()->getPlayerLife(life);
-		if (life!=0) {
-	
-			PlayerStatus::getInstance()->Reset();
-			CGame::GetInstance()->SwitchScene(state);
-		}
-		else {
-			CGame::GetInstance()->SwitchScene(10);
 
-		}*/
-		
 	}
 }
 
@@ -541,6 +549,8 @@ void CPlayScene::Render()
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
 	player->Render();
+	hiteff->Render();
+	deseff->Render();
 	ui->Render();
 
 }
@@ -567,40 +577,61 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	CSimon *simon = ((CPlayScene*)scence)->player;
 	switch (KeyCode)
 	{
-	case DIK_K:
+	case DIK_Z:
 		simon->SetState(SIMON_STATE_JUMP);
 		break;
-	case DIK_Z: // reset
+	case DIK_M: // reset
 		simon->SetState(SIMON_STATE_IDLE);
 		simon->SetStatus(SIMON_STA_NOR);
 		simon->SetPosition(100.0f, 0.0f);
 		simon->SetSpeed(0, 0);
 		break;
-	case DIK_J:
+	case DIK_X:
 		simon->SetStatus(SIMON_STA_ATK);
-		if (CGame::GetInstance()->IsKeyDown(DIK_W)) {
+		if (CGame::GetInstance()->IsKeyDown(DIK_UP)) {
 			simon->subatk();
 		}else
 			simon->atk();
 		break;
-	case DIK_H:
+	case DIK_C:
 		simon->SetStatus(SIMON_STA_ATK);
 		simon->subatk();
 		break;
-	case DIK_1:
+	case DIK_Q:
 		simon->setSubweapon(1);
 		break;
-	case DIK_2:
+	case DIK_W:
 		simon->setSubweapon(2);
 		break;
-	case DIK_3:
+	case DIK_E:
 		simon->setSubweapon(3);
 		break;
-	case DIK_4:
+	case DIK_R:
 		simon->setSubweapon(4);
 		break;
-	case DIK_5:
+	case DIK_T:
 		simon->setSubweapon(5);
+		break;
+	case DIK_A:
+		CGame::GetInstance()->SwitchScene(1);
+		break;
+	case DIK_S:
+		CGame::GetInstance()->SwitchScene(2);
+		break;
+	case DIK_D:
+		CGame::GetInstance()->SwitchScene(3);
+		break;
+	case DIK_F:
+		CGame::GetInstance()->SwitchScene(4);
+		break;
+	case DIK_G:
+		CGame::GetInstance()->SwitchScene(5);
+		break;
+	case DIK_H:
+		CGame::GetInstance()->SwitchScene(6);
+		break;
+	case DIK_SPACE:
+		PlayerStatus::getInstance()->SetHp(10);
 		break;
 	}
 }
@@ -608,7 +639,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	CSimon *simon = ((CPlayScene*)scence)->player;
-	if (KeyCode==DIK_S) {
+	if (KeyCode==DIK_DOWN) {
 		simon->SetStatus(SIMON_STA_STANDUP);
 	}
 }
@@ -620,13 +651,13 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 
 	// disable control key when Mario die 
 	if (simon->GetState() == SIMON_STATE_DIE) return;
-	if (game->IsKeyDown(DIK_D))
+	if (game->IsKeyDown(DIK_RIGHT))
 		simon->SetState(SIMON_STATE_WALKING_RIGHT);
-	else if (game->IsKeyDown(DIK_A))
+	else if (game->IsKeyDown(DIK_LEFT))
 		simon->SetState(SIMON_STATE_WALKING_LEFT);
-	else if (game->IsKeyDown(DIK_S))
+	else if (game->IsKeyDown(DIK_DOWN))
 		simon->SetState(SIMON_STATE_DUCK);
-	else if (game->IsKeyDown(DIK_W))
+	else if (game->IsKeyDown(DIK_UP))
 		simon->SetState(SIMON_STATE_CLIMP);
 	else
 		simon->SetState(SIMON_STATE_IDLE);

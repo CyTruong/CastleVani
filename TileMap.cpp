@@ -22,7 +22,7 @@ TileMap::TileMap(int id, int mapwidth, int mapheight, string mapfile, int textur
 
 void TileMap::LoadTileSet() {
 	CTextures * ctexture = CTextures::GetInstance();
-	LPDIRECT3DTEXTURE9 texTileMap = ctexture->Get(40); //map 1 : 40
+	LPDIRECT3DTEXTURE9 texTileMap = ctexture->Get(this->titlesetId); //map 1 : 40
 
 	CSprites * sprites = CSprites::GetInstance();
 	for (int j = 0; j < this->tileHeight; j++) {
@@ -82,7 +82,6 @@ void TileMap::Render() {
 		for (int j = floorf(camposX); j < ceil(camposX2) - 1; j++) {
 			sprites->Get(TEXTTURE_START + mapMat[i*100+j])->Draw(j * 16, i * 16);
 
-			//sprites->Get(TEXTTURE_START + mapMatrix[i][j])->Draw(j * 16, i * 16);
 		}
 	}
 }

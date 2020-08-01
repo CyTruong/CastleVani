@@ -19,8 +19,11 @@ void Lamp::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects) {
 }
 
 void Lamp::Render() {
-	if(state != LAMP_STATE_DESTROY)
-		animation_set->at(LAMP_ANI_IDLE)->Render(x,y);
+	if (state != LAMP_STATE_DESTROY) {
+		animation_set->at(LAMP_ANI_IDLE)->Render(x, y);
+		RenderBoundingBox();
+	}
+
 }
 
 void  Lamp::GetBoundingBox(float &left, float &top, float &right, float &bottom) {

@@ -7,8 +7,7 @@ BossOrb::BossOrb()
 	this->state = 0;
 	this->atk_able = false;
 	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
-	LPANIMATION_SET ani_set = animation_sets->Get(37);
-
+	LPANIMATION_SET ani_set = animation_sets->Get(38);
 	this->SetAnimationSet(ani_set);
 	this->vy = -0.2f;
 }

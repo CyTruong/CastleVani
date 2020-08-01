@@ -10,7 +10,11 @@ Skeleton::Skeleton()
 	dir = -1;
 	Hp = 2;
 	atkinterval = 1; 
+	allowjump = false;
+	jumping = false;
 	state = SKELETON_STATE_RUN;
+	isblocked = false;
+	havebrick = true;
 }
 
 void Skeleton::GetBoundingBox(float & left, float & top, float & right, float & bottom)
@@ -25,55 +29,59 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (!PlayerStatus::getInstance()->isZAWARUDO()) {
 	
-		if (80 <  abs(player->x - this->x) &&  abs(player->x - this->x) < 100  	) {
-			//if(atkinterval!=0)
+		if (abs(player->x - this->x) < 150 && !start) {
+			start = true;
+			state = SKELETON_STATE_RUN;
+		
+		}
+		if (start) {
+			if (/*80 <  abs(player->x - this->x) &&*/  abs(player->x - this->x) < 100) {
+				//if(atkinterval!=0)
 				atkinterval += dt;
-			if (atkinterval >500 && atkinterval != 0) {
-				atkinterval = 0;
-				ThrowBone();
+				if (atkinterval > ATK_CD && atkinterval != 0) {
+					atkinterval = 0;
+					ThrowBone();
+				}
 			}
-		}
-		if (abs(player->x - this->x) <= 80) {
-			if (player->x < this->x) {
-				dir = 1;
+			
+			
+			if (dir < 0) {
+				this->vx = -SKELETON_SPEED;
 			}
-			if (this->x < player->x) {
-				dir = -1;
+			if (dir > 0) {
+				this->vx = SKELETON_SPEED;
 			}
-		}
-		if (abs(player->x - this->x) >= 170) {
-			if (player->x < this->x) {
-				dir = -1;
+			if (isblocked) {
+				dir = -dir;
+				allowjump = true;
+				vy = SKELETON_JUMP_SPEED;
 			}
-			if (this->x < player->x) {
-				dir = 1;
+			if (allowjump) {
+				allowjump = false;
+				jumping = true;
+				this->vy = -SKELETON_JUMP_SPEED;
 			}
-		}
-		if (dir < 0) {
-			this->vx = -SKELETON_SPEED;
-		}
-		if (dir > 0) {
-			this->vx = SKELETON_SPEED;
-		}
+			else {
+				
+			}
+
+			//DebugOut(L"Knight dir %d \n",dir);
+
+			// Calculate dx, dy 
+			// Simple fall down
+			vy += SKELETON_GRAVITY * dt;
+
+			CGameObject::Update(dt);
+
+			vector<LPCOLLISIONEVENT> coEvents;
+			vector<LPCOLLISIONEVENT> coEventsResult;
+
+			coEvents.clear();
+
+			if (state != OBJ_DIE)
+				CalcPotentialCollisions(coObjects, coEvents, true,true);
 
 
-		//DebugOut(L"Knight dir %d \n",dir);
-
-		// Calculate dx, dy 
-		CGameObject::Update(dt);
-		// Simple fall down
-		vy += SKELETON_GRAVITY * dt;
-
-		vector<LPCOLLISIONEVENT> coEvents;
-		vector<LPCOLLISIONEVENT> coEventsResult;
-
-		coEvents.clear();
-
-		if (state != OBJ_DIE)
-			CalcPotentialCollisions(coObjects, coEvents);
-
-
-		if (abs(player->x - this->x)<156) {
 			if (coEvents.size() == 0)
 			{
 				x += dx;
@@ -81,25 +89,102 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 			else
 			{
-
 				float min_tx, min_ty, nx = 0, ny;
 				float rdx = 0;
 				float rdy = 0;
 
 				FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
-				x += min_tx * dx + nx * 0.4f;
-				y += min_ty * dy + ny * 0.4f;
+				if ((rdy < 0 && rdx == 0 )  || (rdy == 0 && rdx > 0)) {
+					x += vx * dt;
+					y += vy * dt;
+				}
+				else {
+					x += min_tx * dx + nx * 0.4f;
+					y += min_ty * dy + ny * 0.4f;
 
-				if (nx != 0) vx = 0;
-				if (ny != 0) vy = 0;
+					allowjump = false;
+					jumping = false;
+					isblocked = false;
+					if (nx != 0) vx = 0;
+					if (ny != 0) vy = 0;
 
+
+					if (!isblocked &&havebrick) {
+						if (abs(player->x - this->x) <= 70) {
+							if (player->x < this->x) {
+								dir = 1;
+							}
+							if (this->x < player->x) {
+								dir = -1;
+							}
+						}
+						if (abs(player->x - this->x) >= 110) {
+							if (player->x < this->x) {
+								dir = -1;
+							}
+							if (this->x < player->x) {
+								dir = 1;
+							}
+						}
+					}
+				}
+			
+			}
+
+			//Chống lọt hố
+			float pointX = 0;
+			float pointY = y + SKELETON_BBOX_HEIGHT + 5;
+			if (dir < 0) {
+				pointX = this->x - 5;
+			}
+			else
+				if (dir >= 0) {
+					pointX = this->x + SKELETON_BBOX_WIDTH/2 + 5;
+				}
+			bool havebrick = false;
+			isblocked = false;
+			if (!isblocked) {
+				for (int i = 0; i < coObjects->size(); i++) {
+					LPGAMEOBJECT obj = coObjects->at(i);
+					if (obj->x < pointX && pointX < obj->x + 16) {
+						if (obj->y < pointY && pointY < obj->y + 16) {
+							havebrick = true;
+							break;
+						}
+					}
+
+				}
+			}
+			
+
+			//Chống stuck
+			if (!isblocked) {
+				pointY = y + SKELETON_BBOX_HEIGHT - 5;
+				isblocked = false;
+				for (int i = 0; i < coObjects->size(); i++) {
+					LPGAMEOBJECT obj = coObjects->at(i);
+					if (obj->x < pointX && pointX < obj->x + 16) {
+						if (obj->y < pointY && pointY < obj->y + 16) {
+							isblocked = true;
+							break;
+						}
+					}
+
+				}
+			}
+			
+			if (isblocked && !allowjump && !jumping) {
+				DebugOut(L"Brick vl  , xương nhảy lên %d \n", dt);
+				allowjump = false;
+			}
+			if ((!havebrick ) && !allowjump && !jumping) {
+				DebugOut(L"Chống lọt hố , xương nhảy lên %d \n", dt);
+				allowjump = true;
 
 			}
-		}
-
-
-		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+			for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+		}	
 	}
 	//DebugOut(L"skeleton x y %f %f \n", x, y);
 

@@ -57,6 +57,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	#pragma region Simon climp 
 
+	// Kiểm tra xem có đi ra  khỏi cầu thang chưa
 	if (cauthang != NULL) {
 		if (cauthang->type == STAIRS_L2R) { // trái lên phải
 			if (state != SIMON_STATE_CLIMP) {
@@ -72,6 +73,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				if (y + SIMON_BIG_BBOX_HEIGHT < cauthang->y) {
 					cauthang = NULL;
 					vy = 0;
+					y = y - 5;
+					state = SIMON_STATE_WALKING_LEFT;
 					DebugOut(L"Ra khỏi cầu thang 2\n");
 
 				}
@@ -79,6 +82,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					if (y + SIMON_BIG_BBOX_HEIGHT > cauthang->y + cauthang->height) {
 						cauthang = NULL;
 						vy = 0;
+						y = y - 5;
+						state = SIMON_STATE_WALKING_LEFT;
 						DebugOut(L"Ra khỏi cầu thang 2\n");
 					}
 			}
@@ -98,30 +103,92 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					if (y + SIMON_BIG_BBOX_HEIGHT < cauthang->y) {
 						cauthang = NULL;
 						vy = 0;
+						y = y - 2;
 						DebugOut(L"Ra khỏi cầu thang 21\n");
 
 					}
 					else
 						if (y + SIMON_BIG_BBOX_HEIGHT > cauthang->y + cauthang->height) {
 							cauthang = NULL;
+							y = y - 2;
 							vy = 0;
 							DebugOut(L"Ra khỏi cầu thang 21\n");
 						}
 				}
 			}
 	}
+	//Kiểm tra xem có ra khỏi  bước đệm ko
+	if (demcauthang != NULL) {
+		float l, t, r, b;
+		demcauthang->GetBoundingBox(l, t, r, b);
+		if (this->x+SIMON_BIG_BBOX_WIDTH < l 
+			|| this->x >r 
+			|| this->y+SIMON_BIG_BBOX_HEIGHT < t) {
+			demcauthang = NULL;
+			DebugOut(L"Ra khỏi đệm thang %f %f %f %f %f %f \n", this->x + SIMON_BIG_BBOX_WIDTH,l, this->x,r, this->y + SIMON_BIG_BBOX_HEIGHT,t);
+		}
+	}
+	//Kiểm tra xem có leo hay đi cầu thang dc ko
+	if (state == SIMON_STATE_CLIMP && cauthang==NULL && demcauthang == NULL) {
+		state = SIMON_STATE_IDLE;
+	}
+	
+	//đi trên đệm
+	if (state == SIMON_STATE_CLIMP && cauthang==NULL && demcauthang != NULL) {
+		if (demcauthang->GetSimonVertex(this->x, this->y, this->vx, this->vy)) {
+			this->cauthang = dynamic_cast<Stairs*>( demcauthang->Stair);
+
+			DebugOut(L"vx vy nx %f %f %d \n", vx, vy, nx);
+			this->vx = 0;
+			this->vy = 0;
+			if (this->cauthang->type == STAIRS_L2R) {
+				
+			}
+			if (this->cauthang->type == STAIRS_R2L) {
+
+			}
+
+			if (vx > 0) {
+				this->nx = -1;
+			}
+			if (vx < 0) {
+				this->nx = 1;
+			}
+		}
+		else {
+			if (vx < 0) {
+				state = SIMON_STATE_WALKING_RIGHT;
+			}
+			else {
+				state = SIMON_STATE_WALKING_LEFT;
+			}
+		}
+		
+	}
+	else
+	//Leo cầu thang
 	if (state == SIMON_STATE_CLIMP && cauthang != NULL) {
 		float l, t, r, b;
 		GetBoundingBox(l, t, r, b);
 		cauthang->SetSimonPos(this->x, this->y, (r - l), (b - t));
 
 		float fx, fy;
-		cauthang->GetStaireVector(vy, fx, fy);
-		DebugOut(L"simon stte %d v %f fx %f fy %f \n", state, this->vy, fx, fy);
-
-		this->dx = fx * dt;
-		this->dy = fy * dt;
-
+		cauthang->GetStaireVector(x,y,vx,vy, fx, fy);
+		//DebugOut(L"simon stte %d v %f fx %f fy %f \n", state, this->vy, fx, fy);
+		if (fx > 0) {
+			this->nx = 1;
+		}
+		if (fx < 0) {
+			this->nx = -1;
+		}
+		if (whip->isAtk) {
+			fx = 0;
+			fy = 0;
+		}
+		/*this->dx = fx * dt;
+		this->dy = fy * dt;*/
+		dx = vx * dt;
+		dy = vy * dt;
 	}
 
 	#pragma endregion
@@ -146,10 +213,11 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 #pragma endregion
 
 	#pragma region Simon đứng dậy
-	if (status == SIMON_STA_STANDUP && state != SIMON_STATE_CLIMP) {
+	if (status == SIMON_STA_STANDUP && state != SIMON_STATE_CLIMP && isducking) {
 		DebugOut(L"Stand up \n");
-		y = y - (SIMON_BIG_BBOX_HEIGHT - 0.8*SIMON_SMALL_BBOX_HEIGHT) - 10; //0.8 là giảm số khi đứng dậy ko bị rớt khỏi map 
+		y = y - (SIMON_BIG_BBOX_HEIGHT -1*SIMON_SMALL_BBOX_HEIGHT) - 5; //0.8 là giảm số khi đứng dậy ko bị rớt khỏi map 
 		status = SIMON_STA_NOR;
+		isducking = false;
 	}
 
 	#pragma endregion
@@ -255,7 +323,13 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 						}
 					}
 				}
-			else 
+				
+				if (dynamic_cast<StairStep *>(e->obj)) {
+					DebugOut(L"Ok đệm thang \n");
+					if(cauthang==NULL)
+						demcauthang = dynamic_cast<StairStep *>(e->obj);
+				}
+							 
 				if (dynamic_cast<CPortal *>(e->obj))
 				{
 					CPortal *p = dynamic_cast<CPortal *>(e->obj);
@@ -276,13 +350,11 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			if (enemy->at(i)->state != OBJ_DIE) {
 				float l, t, r, b;
 				enemy->at(i)->GetBoundingBox(l, t, r, b);
-				if (l > wl && l < wr) {
-					if (!(b < wt || t > wb)) {
-						StartUntouchable();
-						vy = -SIMON_JUMP_SPEED_Y *2/3;
-						PlayerStatus::getInstance()->SubHp(1);
-					}
-				}
+				if (CheckCollisionWith(l,t,r,b)) {
+					StartUntouchable();
+					vy = -SIMON_JUMP_SPEED_Y * 2 / 3;
+					PlayerStatus::getInstance()->SubHp(1);
+				}		
 			}
 		}
 	}
@@ -304,7 +376,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 }
 
 void CSimon::atk() {
-	DebugOut(L"x %f y %f \n",x,y);
+	DebugOut(L"atk x %f y %f \n",x,y);
 	if (!whip->isAtk) {
 
 		if (vx == 0) {
@@ -326,7 +398,7 @@ void CSimon::atk() {
 			}
 		}
 		/*whip->atk(WHIP_DIR_LEFT);*/
-
+		vx = 0;
 	}
 }
 
@@ -362,7 +434,7 @@ void CSimon::subatk()
 
 void CSimon::Render()
 {
-	int ani;
+	int ani = -1;
 	if (state == SIMON_STATE_DIE)
 	{
 		if (vx <= 0 ) {
@@ -398,6 +470,8 @@ void CSimon::Render()
 
 	}else
 	if (state == SIMON_STATE_DUCK) {	
+			isducking = true;
+
 			if (nx > 0)
 				ani = SIMON_ANI_DUCK_RIGHT;
 			else ani = SIMON_ANI_DUCK_LEFT;
@@ -481,15 +555,42 @@ void CSimon::Render()
 			
 		}
 		if (status == SIMON_STA_ATK) {
-			if (vx == 0)
+			
+			switch (ani)
 			{
-				if (nx > 0)
-					ani = SIMON_ANI_WHIP_SUB_RIGHT;
-				else ani = SIMON_ANI_WHIP_SUB_LEFT;
+			 case SIMON_ANI_CLIMB_UP_RIGHT :
+				ani = SIMON_ANI_WHIP_CLIMPUP_RIGHT;
+			
+				break;
+			 case SIMON_ANI_CLIMB_UP_LEFT :
+				 ani = SIMON_ANI_WHIP_CLIMPUP_LEFT;
+				 break;
+			 case SIMON_ANI_CLIMB_DOWN_LEFT:
+				 ani = SIMON_ANI_WHIP_CLIMPDOWN_LEFT;
+				 break;
+			 case SIMON_ANI_CLIMB_DOWN_RIGHT:
+				 ani = SIMON_ANI_WHIP_CLIMPDOWN_RIGHT;
+				 break;
+			 case SIMON_ANI_CLIMP_STAND_RIGHT:
+				 if (cauthang->type == STAIRS_L2R) {
+					 ani = SIMON_ANI_WHIP_CLIMPUP_RIGHT;
+				 }
+				 if (cauthang->type == STAIRS_R2L) {
+					 ani = SIMON_ANI_WHIP_CLIMPDOWN_RIGHT;
+				 }
+				 break;
+			 case SIMON_ANI_CLIMP_STAND_LEFT :
+				 if (cauthang->type == STAIRS_L2R) {
+					 ani = SIMON_ANI_WHIP_CLIMPDOWN_LEFT;
+				 }
+				 if (cauthang->type == STAIRS_R2L) {
+					 ani = SIMON_ANI_WHIP_CLIMPUP_LEFT;
+				 }
+				 break;
+			default:
+				
+				break;
 			}
-			else if (vx > 0)
-				ani = SIMON_ANI_WHIP_SUB_RIGHT;
-			else ani = SIMON_ANI_WHIP_SUB_LEFT;
 		}
 	}
 	
@@ -514,8 +615,18 @@ void CSimon::Render()
 	bool islastF = false;
 	if (untouchable==1 && (GetTickCount() - untouchable_start)%2 == 0) {
 		//Ko render
-	}else
-	islastF = animation_set->at(ani)->Render(x, y, alpha);
+	}
+	else {
+		if (ani==-1) {
+			state = SIMON_STATE_IDLE;
+			status = SIMON_STA_NOR;
+			vx = 0;
+			vy = 0;
+			ani = SIMON_ANI_IDLE_LEFT;
+		}
+		islastF = animation_set->at(ani)->Render(x, y, alpha);
+
+	}
 
 	if (islastF && status == SIMON_STA_ATK) {
 		status = SIMON_STA_NOR;
@@ -546,12 +657,41 @@ void CSimon::SetState(int state)
 	switch (state)
 	{
 	case SIMON_STATE_WALKING_RIGHT:
-		vx = SIMON_WALKING_SPEED;
-		nx = 1;
+		if (this->state == SIMON_STATE_CLIMP) {
+			state = SIMON_STATE_CLIMP;
+			if (this->cauthang!=NULL) {
+				if (cauthang->type == STAIRS_R2L) {
+					vy = 0.02f;
+				}
+				if (cauthang->type == STAIRS_L2R) {
+					vy = -0.02f;
+				}
+			}
+			break;
+		}
+		if (!whip->isAtk) {
+			vx = SIMON_WALKING_SPEED;
+			nx = 1;
+		}
+	
 		break;
 	case SIMON_STATE_WALKING_LEFT:
-		vx = -SIMON_WALKING_SPEED;
-		nx = -1;
+		if (this->state == SIMON_STATE_CLIMP) {
+			state = SIMON_STATE_CLIMP;
+			if (this->cauthang != NULL) {
+				if (cauthang->type==STAIRS_L2R) {
+					vy = 0.02f;
+				}
+				if (cauthang->type == STAIRS_R2L) {
+					vy = -0.02f;
+				}
+			}
+		}
+		if (!whip->isAtk) {
+			vx = -SIMON_WALKING_SPEED;
+			nx = -1;
+		}
+	
 		break;
 	case SIMON_STATE_JUMP:
 	{
@@ -565,11 +705,13 @@ void CSimon::SetState(int state)
 	}
 	
 	case SIMON_STATE_CLIMP:
+		//nếu có cầu thang
 		if (this->cauthang != NULL) {
 			vy = -0.02f;
 		}
 		else {
-			state = SIMON_STATE_IDLE;
+			//state = SIMON_STATE_IDLE;
+			
 		}
 		break;
 	case SIMON_STATE_IDLE:
@@ -582,7 +724,6 @@ void CSimon::SetState(int state)
 		break;
 	case SIMON_STATE_DUCK:
 		//vy = 0.02f;
-		
 		break;
 	case SIMON_STATE_DIE:
 		vy = 0;

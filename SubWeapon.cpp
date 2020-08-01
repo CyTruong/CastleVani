@@ -6,6 +6,8 @@
 #include "EnemySpawn.h"	
 #include "PlayerStatus.h"
 #include "TimeStop.h"
+#include "ItemSpaw.h"
+#include "Effect.h"
 SubWeapon::SubWeapon()
 {
 	PlayerStatus::getInstance()->getSubWeaponIndex(weapon_type);
@@ -104,33 +106,63 @@ void SubWeapon::Atk(float x, float y, float dir)
 void SubWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (weapon_type != SUB_WEAPON_NON) {
-		weapon->Update(dt,coObjects);
 		float wl, wt, wr, wb;
 		this->weapon->GetBoundingBox(wl, wt, wr, wb);
+
+
+		for (UINT i = 0; i < coObjects->size(); i++)
+		{
+			if (coObjects->at(i)->atk_able && coObjects->at(i)->state != OBJ_DIE) {
+				float l, t, r, b;
+				coObjects->at(i)->GetBoundingBox(l, t, r, b);
+							
+				if (wl < r &&
+					wr > l  &&
+					wt < b &&
+					wb > t) {
+					coObjects->at(i)->SetState(OBJ_DIE);
+					ItemSpaw::getInstance()->CreateObj(coObjects->at(i)->x, coObjects->at(i)->y, coObjects->at(i)->dropItem);
+					weapon->SetState(-1);
+					Effect::getInstance()->setHitEffect(true);
+					Effect::getInstance()->setHitEffectPos(coObjects->at(i)->x + 3, coObjects->at(i)->y + 5);
+					Effect::getInstance()->setDesEffect(true);
+					Effect::getInstance()->setDesEffect((l + r) / 2, (t + b) / 2);
+				}
+			
+			}
+		}
+
+
 		vector<LPGAMEOBJECT>* enemys = EnemySpawn::getInstance()->getEnemlist();
 		for (UINT i = 0; i < enemys->size(); i++) {
 			if (enemys->at(i)->state != OBJ_DIE) {
 				float l, t, r, b;
 				enemys->at(i)->GetBoundingBox(l, t, r, b);
-				if (l > wl && l < wr) {
-					if (!(b < wt || t > wb)) {
-						if (effted) {
-							effted = false;
-							Enemy* enemy = dynamic_cast<Enemy *>(enemys->at(i));
-							DebugOut(L"enemy hp %d \n", enemy->Hp);
-							if (enemy->minusHp(damage)) {
-								enemys->at(i)->SetState(OBJ_DIE);
-								PlayerStatus::getInstance()->increaseScore(100);
-							}
-							weapon->SetState(-1);
 
-							//	ItemSpaw::getInstance()->CreateObj(coObjects->at(i)->x, coObjects->at(i)->y-20);
+				if (wl < r &&
+					wr > l  &&
+					wt < b &&
+					wb > t) {
+					if (effted) {
+						effted = false;
+						Enemy* enemy = dynamic_cast<Enemy *>(enemys->at(i));
+						DebugOut(L"enemy hp %d \n", enemy->Hp);
+						if (enemy->minusHp(damage)) {
+							enemys->at(i)->SetState(OBJ_DIE);
+							PlayerStatus::getInstance()->increaseScore(100);
 						}
+						Effect::getInstance()->setHitEffect(true);
+						Effect::getInstance()->setHitEffectPos(enemys->at(i)->x + 3, enemys->at(i)->y + 5);
+						weapon->SetState(-1);
 
+						//	ItemSpaw::getInstance()->CreateObj(coObjects->at(i)->x, coObjects->at(i)->y-20);
 					}
 				}
+				
 			}
 		}
+		weapon->Update(dt, coObjects);
+
 	}
 	
 }

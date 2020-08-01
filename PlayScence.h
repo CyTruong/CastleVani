@@ -9,13 +9,16 @@
 #include "TileMap.h"
 #include "Simon.h"
 #include "UI.h"
-
+#include "HitEffect.h"
+#include "DestroyEffect.h"
 class CPlayScene: public CScene
 {
 protected: 
 	CSimon *player;					// A play scene has to have player, right? 
 	TileMap *map;
 	vector<LPGAMEOBJECT> objects;
+	HitEffect* hiteff;
+	DestroyEffect* deseff;
 	UI* ui;
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_Map(string line);

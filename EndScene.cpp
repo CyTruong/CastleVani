@@ -251,26 +251,26 @@ void CEndScenceKeyHandler::OnKeyDown(int KeyCode)
 	int option = ((EndScene*)scence)->section;
 	switch (KeyCode)
 	{
-	case DIK_W:
+	case DIK_UP:
 		cursor->SetPosition(58, 122);
 		((EndScene*)scence)->section = 1;
 		break;
-	case DIK_S:
+	case DIK_DOWN:
 		 cursor = ((EndScene*)scence)->objects.at(1);
 		cursor->SetPosition(58, 148);
 		((EndScene*)scence)->section = 2;
 		break;
-	case DIK_J:
+	case DIK_X:
 		
 		if (option==1) {
 			int scene;
 			PlayerStatus::getInstance()->getStateIndex(scene);
 			PlayerStatus::getInstance()->Renew();
-			CGame::GetInstance()->SwitchScene(scene);
+			CGame::GetInstance()->SwitchScene(1,true);
 
 		}
 		else {
-			CGame::GetInstance()->SwitchScene(0);
+			CGame::GetInstance()->SwitchScene(0,true);
 			PlayerStatus::getInstance()->Renew();
 		}
 		break;

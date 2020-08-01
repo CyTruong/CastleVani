@@ -5,12 +5,13 @@
 #include "SubWeapon.h"
 #include "Stairs.h"
 #include "PlayerStatus.h"
- 
-#define SIMON_WALKING_SPEED		0.09f 
+#include "StairStep.h"
 
-#define SIMON_JUMP_SPEED_Y		/*0.35f*/ 0.42f
+#define SIMON_WALKING_SPEED		0.05f  //0.05
+
+#define SIMON_JUMP_SPEED_Y		/*0.27*/ 0.22
 #define SIMON_JUMP_DEFLECT_SPEED 0.2f
-#define SIMON_GRAVITY			0.002f
+#define SIMON_GRAVITY			/*0.0013f*/ 0.0007f
 #define SIMON_DIE_DEFLECT_SPEED	 0.5f
 
 #define SIMON_STATE_IDLE			0
@@ -44,13 +45,14 @@
 #define SIMON_ANI_CLIMP_STAND_RIGHT 19
 #define SIMON_ANI_DIE_LEFT 20
 #define SIMON_ANI_DIE_RIGHT 21
-
-
+#define SIMON_ANI_WHIP_CLIMPUP_LEFT 22
+#define SIMON_ANI_WHIP_CLIMPUP_RIGHT 23
+#define SIMON_ANI_WHIP_CLIMPDOWN_LEFT 24
+#define SIMON_ANI_WHIP_CLIMPDOWN_RIGHT 25
 
 #define	SIMON_STA_NOR	1
 #define SIMON_STA_ATK   2
 #define SIMON_STA_STANDUP 3
-
 
 #define SIMON_BIG_BBOX_WIDTH  16
 #define SIMON_BIG_BBOX_HEIGHT 30
@@ -60,7 +62,6 @@
 
 #define SIMON_SMALL_BBOX_WIDTH  16
 #define SIMON_SMALL_BBOX_HEIGHT 23
-
 
 #define SIMON_UNTOUCHABLE_TIME 1000
 
@@ -75,7 +76,9 @@ class CSimon : public CGameObject
 	Whip* whip;
 	SubWeapon* subweapon;
 	Stairs* cauthang;
+	StairStep* demcauthang;
 	bool isCauthang;
+	bool isducking;
 public:
 	CSimon() : CGameObject()
 	{
@@ -89,6 +92,7 @@ public:
 		atk_able = false;
 		subweapon = new SubWeapon();
 		int subwptype;
+		isducking = false;
 		PlayerStatus::getInstance()->getSubWeaponIndex(subwptype);
 		subweapon->SetWeaponType(subwptype);
 	}

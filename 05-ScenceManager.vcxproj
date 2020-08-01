@@ -138,7 +138,9 @@
     <ClCompile Include="Candle.cpp" />
     <ClCompile Include="Dagger.cpp" />
     <ClCompile Include="DaggerPicker.cpp" />
+    <ClCompile Include="DestroyEffect.cpp" />
     <ClCompile Include="dRaven.cpp" />
+    <ClCompile Include="Effect.cpp" />
     <ClCompile Include="EmptyObj.cpp" />
     <ClCompile Include="EndScene.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -148,6 +150,7 @@
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="Heart.cpp" />
     <ClCompile Include="HeartMini.cpp" />
+    <ClCompile Include="HitEffect.cpp" />
     <ClCompile Include="HolyPicker.cpp" />
     <ClCompile Include="HolyWater.cpp" />
     <ClCompile Include="IntroScence.cpp" />
@@ -164,6 +167,7 @@
     <ClCompile Include="Skeleton.cpp" />
     <ClCompile Include="SkeletonBone.cpp" />
     <ClCompile Include="Stairs.cpp" />
+    <ClCompile Include="StairStep.cpp" />
     <ClCompile Include="StartScene.cpp" />
     <ClCompile Include="SubWeapon.cpp" />
     <ClCompile Include="TileMap.cpp" />
@@ -197,7 +201,9 @@
     <ClInclude Include="Candle.h" />
     <ClInclude Include="Dagger.h" />
     <ClInclude Include="DaggerPicker.h" />
+    <ClInclude Include="DestroyEffect.h" />
     <ClInclude Include="dRaven.h" />
+    <ClInclude Include="Effect.h" />
     <ClInclude Include="EmptyObj.h" />
     <ClInclude Include="EndScene.h" />
     <ClInclude Include="Enemy.h" />
@@ -207,6 +213,7 @@
     <ClInclude Include="Grid.h" />
     <ClInclude Include="Heart.h" />
     <ClInclude Include="HeartMini.h" />
+    <ClInclude Include="HitEffect.h" />
     <ClInclude Include="HolyPicker.h" />
     <ClInclude Include="HolyWater.h" />
     <ClInclude Include="IntroScence.h" />
@@ -219,10 +226,12 @@
     <ClInclude Include="Monkey.h" />
     <ClInclude Include="PlayerStatus.h" />
     <ClInclude Include="Portal.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Simon.h" />
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="SkeletonBone.h" />
     <ClInclude Include="Stairs.h" />
+    <ClInclude Include="StairStep.h" />
     <ClInclude Include="StartScene.h" />
     <ClInclude Include="SubWeapon.h" />
     <ClInclude Include="TileMap.h" />
@@ -245,6 +254,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="CastleVania.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

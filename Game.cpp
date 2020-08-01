@@ -432,17 +432,19 @@ void CGame::Load(LPCWSTR gameFile)
 	SwitchScene(current_scene);
 }
 
-void CGame::SwitchScene(int scene_id)
+void CGame::SwitchScene(int scene_id,bool isreset)
 {
 	// IMPORTANT: has to implement "unload" previous scene assets to avoid duplicate resources
 	current_scene = scene_id;
 
 	LPSCENE s = scenes[current_scene];
 	s->Unload();
-
-	CTextures::GetInstance()->Clear();
-	CSprites::GetInstance()->Clear();
-	CAnimations::GetInstance()->Clear();
+	if (isreset) {
+		CTextures::GetInstance()->Clear();
+		CSprites::GetInstance()->Clear();
+		CAnimations::GetInstance()->Clear();
+	}
+	
 
 	CGame::GetInstance()->SetKeyHandler(s->GetKeyEventHandler());
 	

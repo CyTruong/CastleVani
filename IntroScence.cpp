@@ -206,7 +206,7 @@ void IntroScence::Update(DWORD dt)
 	if (objects[1]->y < 400) {
 		timer += dt;
 		if (timer > 2000) {
-			CGame::GetInstance()->SwitchScene(1);
+			CGame::GetInstance()->SwitchScene(1,true);
 
 		}
 	}
@@ -238,6 +238,9 @@ void CSIntroScenceKeyHandler::KeyState(BYTE * states)
 
 void CSIntroScenceKeyHandler::OnKeyDown(int KeyCode)
 {
+	if (KeyCode == DIK_X) {
+		CGame::GetInstance()->SwitchScene(1, true);
+	}
 }
 
 void CSIntroScenceKeyHandler::OnKeyUp(int KeyCode)

@@ -7,6 +7,10 @@
 #include "Game.h"
 #include "GameObject.h"
 #include "Sprites.h"
+#include "Item.h"
+#include "Candle.h"
+#include "Stairs.h"
+#include "StairStep.h"
 
 CGameObject::CGameObject()
 {
@@ -22,6 +26,20 @@ void CGameObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	this->dt = dt;
 	dx = vx*dt;
 	dy = vy*dt;
+}
+
+bool CGameObject::CheckCollisionWith(float l, float t, float r, float b)
+{
+	float x1, y1, x2, y2;
+	GetBoundingBox(x1, y1, x2, y2);
+	if (x1 < r &&
+		x2 > l  &&
+		y1 < b &&
+		y2 > t) {
+		return true;
+	}
+	return false;
+
 }
 
 /*
@@ -67,10 +85,26 @@ LPCOLLISIONEVENT CGameObject::SweptAABBEx(LPGAMEOBJECT coO)
 */
 void CGameObject::CalcPotentialCollisions(
 	vector<LPGAMEOBJECT> *coObjects, 
-	vector<LPCOLLISIONEVENT> &coEvents)
+	vector<LPCOLLISIONEVENT> &coEvents,bool ExceptItem,bool ExceptOrtherObj)
 {
 	for (UINT i = 0; i < coObjects->size(); i++)
 	{
+		if (ExceptItem) {
+			if (dynamic_cast<Item*>(coObjects->at(i))) {
+				continue;
+			}
+		}
+		if (ExceptItem) {
+			if (dynamic_cast<Candle*>(coObjects->at(i))) {
+				continue;
+			}
+			if (dynamic_cast<Stairs*>(coObjects->at(i))) {
+				continue;
+			}
+			if (dynamic_cast<StairStep*>(coObjects->at(i))) {
+				continue;
+			}
+		}
 		if (coObjects->at(i)->GetState()!=OBJ_DIE) {
 			LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
 
@@ -142,7 +176,7 @@ void CGameObject::RenderBoundingBox()
 	rect.right = (int)r - (int)l;
 	rect.bottom = (int)b - (int)t;
 
-	//CGame::GetInstance()->Draw(x, y, bbox, rect.left, rect.top, rect.right, rect.bottom, 32);
+	CGame::GetInstance()->Draw(l, t, bbox, rect.left, rect.top, rect.right, rect.bottom, 80);
 }
 
 

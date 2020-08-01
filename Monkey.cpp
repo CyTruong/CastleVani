@@ -1,4 +1,4 @@
-#include "Monkey.h"
+﻿#include "Monkey.h"
 #include "PlayerStatus.h"
 
 
@@ -14,7 +14,10 @@ Monkey::Monkey()
 	state = MONKEY_STATE_IDLE;
 	curspeed = MONKEY_SPEED;
 	curhight = MONKEY_JUMP_SPEED;
+	jumpstate = 2;
 	timer = 0;
+	counter = 0;
+	jumpstate = 1;
 }
 
 void Monkey::GetBoundingBox(float & left, float & top, float & right, float & bottom)
@@ -29,7 +32,7 @@ void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (!PlayerStatus::getInstance()->isZAWARUDO()) {
 
-		if (abs(player->x - this->x) < 105 && !start) {
+		if (abs(player->x - this->x) < 80 && !start) {
 			start = true;
 			state = MONKEY_STATE_JUMP;
 			if (player->x < this->x) {
@@ -46,23 +49,6 @@ void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 
 		if (start) {
-			timer = timer + dt;
-			if (timer >800) {
-				if (dir == -1) {
-					this->vx = -curspeed;
-				}
-				else {
-					this->vx = curspeed;
-				}
-
-				if (!isJumping) {
-					vy = -curhight;
-					state = MONKEY_STATE_JUMP;
-					isJumping = true;
-				}
-				timer = 0;
-			}else{
-			}
 			
 			// Calculate dx, dy 
 			CGameObject::Update(dt);
@@ -74,11 +60,28 @@ void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			coEvents.clear();
 
+			if (!isJumping) {
+				counter++;			
+				//DebugOut(L"JUMP type %d \n", jumpstate);
+
+				if (counter % 2 == 0) {
+					if (jumpstate == 1) {
+						curhight = MONKEY_JUMP_SPEED2;
+						curspeed = MONKEY_SPEED2;
+						jumpstate = 2;
+					}
+					else {
+						curhight = MONKEY_JUMP_SPEED;
+						curspeed = MONKEY_SPEED;
+						jumpstate = 1;
+					}
+				}
+				isJumping = false;
+			}
+
 			// turn off collision when die 
 			if (state != OBJ_DIE)
-				CalcPotentialCollisions(coObjects, coEvents);
-
-
+				CalcPotentialCollisions(coObjects, coEvents,true);
 
 			if (coEvents.size() == 0)
 			{
@@ -87,30 +90,70 @@ void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 			else
 			{
-
-				state = MONKEY_STATE_IDLE;
-				/*if (start ) {
-					curhight = curhight / 1.5;
-					curspeed = curspeed * 1.5;
-					if (curspeed >= 0.12f) {
-						curspeed = 0.12f;
-						curhight = 0.12f;
-					}
-				}*/
-				isJumping = false;
+				
+			
+			
 				float min_tx, min_ty, nx = 0, ny;
 				float rdx = 0;
 				float rdy = 0;
 
-				// TODO: This is a very ugly designed function!!!!
 				FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
-				x += min_tx * dx + nx * 0.4f;
-				y += min_ty * dy + ny * 0.4f;
+		
+				if (rdy > 0 || y > MAX_HIGHT) {
 
-				if (nx != 0) vx = 0;
-				if (ny != 0) vy = 0;
+					state = MONKEY_STATE_IDLE;
+					isJumping = false;
+					x += min_tx * dx + nx * 0.4f;
+					y += min_ty * dy + ny * 0.4f;
+					if (nx != 0) vx = 0;
+					if (ny != 0) vy = 0;
+					
+					if (abs(player->x - this->x) > 60) {
+						if (player->x < this->x) {
+							dir = -1;
+						}
+						else {
+							dir = 1;
+						}
+					}
 
+					timer += dt;
+					if (timer > 100) {
+						timer = 0;
+						if (dir == -1) {
+							this->vx = -curspeed;
+						}
+						else {
+							this->vx = curspeed;
+						}
+
+						if (!isJumping) {
+							vy = -curhight;
+							state = MONKEY_STATE_JUMP;
+						}
+
+					}
+					
+				}
+				else {
+					x += vx * dt;
+					y += vy * dt;
+					DebugOut(L"    vx vy %f %f \n", vx, vy);
+					DebugOut(L"    nx ny %f %f \n", nx, ny);
+					DebugOut(L"    rx ry %f %f \n", rdx, rdy);
+				}
+
+			
+
+				if (isJumping && nx !=0) {
+					if (nx < 0) {
+						dir = -1;
+					}
+					else {
+						dir = 1;
+					}
+				}
 
 			}
 			//DebugOut(L"dis %f vx %f state %d  \n", abs(player->x - this->x), vx,state);
@@ -119,18 +162,20 @@ void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			//DebugOut(L"state %d \n",state);
 		}
-		}
+	}
 
 
-	
+	//DebugOut(L"Hight %f \n",y);
 
-	if (this->start==OBJ_DIE) {
+	if (this->state==OBJ_DIE) {
 		start = false;
 		dir = 0;
 		curspeed = MONKEY_SPEED;
 		curhight = MONKEY_JUMP_SPEED;
 		isJumping = false;
 		timer = 0;
+		jumpstate = 1;
+		counter =  0;
 	}
 }
 

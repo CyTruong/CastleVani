@@ -16,6 +16,7 @@
 #define KNIGHT_ANI_IDLE_RIGHT 1
 #define KNIGHT_ANI_RUN_LEFT 2
 #define KNIGHT_ANI_RUN_RIGHT 3
+#define KNIGHT_HP 2
 
 class Knight : public Enemy
 {

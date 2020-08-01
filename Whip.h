@@ -6,6 +6,7 @@
 //26 13
 #define SPRITE_ID_START 41000
 
+#define WHIP_BBOX_WIDTH_NONE 0
 #define WHIP_BBOX_WIDTH_SHORT 40
 #define WHIP_BBOX_HEIGHT 8
 #define WHIP_BBOX_WIDTH_LONG 50
@@ -25,6 +26,8 @@
 #define WHIP_DIR_LEFT 0
 #define WHIP_DIR_RIGHT 1	
 
+#define EXTRA_MOD_SIMONWIDTH 15
+#define EXTRA_MOD_SIMONHEIGHT 10
 class Whip : public CGameObject
 {
 private:

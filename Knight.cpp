@@ -1,4 +1,4 @@
-#include "Knight.h"
+﻿#include "Knight.h"
 #include "PlayerStatus.h"
 
 
@@ -9,7 +9,7 @@ Knight::Knight()
 	start = false;
 	collision_able = false;
 	dir = -1;
-	Hp = 4;
+	Hp = KNIGHT_HP;
 	state = KNIGHT_STATE_IDLE;
 }
 
@@ -24,7 +24,7 @@ void Knight::GetBoundingBox(float & left, float & top, float & right, float & bo
 void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (!PlayerStatus::getInstance()->isZAWARUDO()) {
-		if (abs(player->x - this->x) < 125 && !start) {
+		if (abs(player->x - this->x) < 150 && !start) {
 			start = true;
 			state = KNIGHT_STATE_RUN;
 			if (player->x < this->x) {
@@ -35,13 +35,16 @@ void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 		}
 		if (start) {
-			if (abs(player->x - this->x) > 95) {
-				if (player->x < this->x) {
-					dir = -1;
+			if (abs(player->x - this->x) > 40) {
+				if (abs(player->y - this->y) < 15) {
+					if (player->x +5 < (this->x + KNIGHT_BBOX_WIDTH)) {
+						dir = -1;
+					}
+					else {
+						dir = 1;
+					}
 				}
-				else {
-					dir = 1;
-				}
+				
 			}
 			if (dir == -1) {
 				this->vx = -KNIGHT_SPEED;
@@ -63,7 +66,7 @@ void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			coEvents.clear();
 
 			if (state != OBJ_DIE)
-				CalcPotentialCollisions(coObjects, coEvents);
+				CalcPotentialCollisions(coObjects, coEvents,true);
 
 
 
@@ -85,18 +88,58 @@ void Knight::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				x += min_tx * dx + nx * 0.4f;
 				y += min_ty * dy + ny * 0.4f;
 
-				if (nx != 0) vx = 0;
+				if (nx != 0) {
+					vx = 0;
+					/*dir = -dir;*/
+				}
 				if (ny != 0) vy = 0;
 
 
 			}
-			if (vx == 0) {
-				dir = -dir;
-			}
+			
 			for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
+			//Chống lọt hố
+			float pointX = 0;
+			float pointY = y + KNIGHT_BBOX_HEIGHT + 5;
+			if (vx < 0) {
+				pointX = this->x - 5;
+			}else
+			if ( vx >= 0) {
+				pointX = this->x + KNIGHT_BBOX_WIDTH + 5;
+			}
+			bool havebrick = false;
+			bool isblocked = false;
+			for (int i = 0; i < coObjects->size();i ++) {
+				LPGAMEOBJECT obj = coObjects->at(i);
+				if (obj->x < pointX && pointX < obj->x+16) {
+					if (obj->y < pointY && pointY < obj->y + 16) {
+						havebrick = true;
+						break;
+					}
+				}
+		
+			}
+
+			//Chống stuck
+			 pointY = y + KNIGHT_BBOX_HEIGHT -5 ;
+			 isblocked = false;
+			for (int i = 0; i < coObjects->size(); i++) {
+				LPGAMEOBJECT obj = coObjects->at(i);
+				if (obj->x < pointX && pointX < obj->x + 16) {
+					if (obj->y < pointY && pointY < obj->y + 16) {
+						isblocked = true;
+						break;
+					}
+				}
+
+			}
+
+			if (!havebrick || isblocked) {
+				DebugOut(L"Chống lọt hố quay xe %d \n",dt);
+				dir = -dir;
+			}
 			//DebugOut(L"Knight speed %f \n", vx);
-			DebugOut(L"Knight position %f %f \n", x, y);
 
 
 		}
