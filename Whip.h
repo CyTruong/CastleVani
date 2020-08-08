@@ -38,6 +38,7 @@ private:
 	int dir;
 	int level;
 	bool effted;
+	long cdtimer;
 public:
 	bool isAtk;
 public:

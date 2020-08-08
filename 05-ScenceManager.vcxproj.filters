@@ -228,6 +228,9 @@
     <ClCompile Include="FloatingBrick.cpp">
       <Filter>Source Files\Obj</Filter>
     </ClCompile>
+    <ClCompile Include="StairStep2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Simon.h">
@@ -414,6 +417,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DestroyEffect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StairStep2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

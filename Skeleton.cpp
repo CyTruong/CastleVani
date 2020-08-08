@@ -11,7 +11,7 @@ Skeleton::Skeleton()
 	Hp = 2;
 	atkinterval = 1; 
 	allowjump = false;
-	jumping = false;
+	jumping = true;
 	state = SKELETON_STATE_RUN;
 	isblocked = false;
 	havebrick = true;
@@ -29,7 +29,7 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (!PlayerStatus::getInstance()->isZAWARUDO()) {
 	
-		if (abs(player->x - this->x) < 150 && !start) {
+		if (abs(player->x - this->x) < 120 && !start) {
 			start = true;
 			state = SKELETON_STATE_RUN;
 		

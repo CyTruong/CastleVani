@@ -14,6 +14,8 @@ private:
 	LPGAMEOBJECT weapon;
 	bool effted;
 	int damage;
+	long delaytimer;
+	float tempoX, tempoY;
 public:
 	bool isready;
 public:

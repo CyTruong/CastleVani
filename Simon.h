@@ -54,7 +54,7 @@
 #define SIMON_STA_ATK   2
 #define SIMON_STA_STANDUP 3
 
-#define SIMON_BIG_BBOX_WIDTH  16
+#define SIMON_BIG_BBOX_WIDTH  14
 #define SIMON_BIG_BBOX_HEIGHT 30
 
 #define SIMON_BIG_ATK_BBOX_WIDTH  45
@@ -79,6 +79,7 @@ class CSimon : public CGameObject
 	bool isCauthang;
 	bool isducking;
 	long jumptimer;
+	long atkcdtimer;
 public:
 	Stairs* cauthang;
 public:
@@ -98,6 +99,7 @@ public:
 		isducking = false;
 		PlayerStatus::getInstance()->getSubWeaponIndex(subwptype);
 		subweapon->SetWeaponType(subwptype);
+		atkcdtimer = 0;
 	}
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
 	virtual void Render();

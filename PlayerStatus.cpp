@@ -14,7 +14,7 @@ PlayerStatus * PlayerStatus::getInstance()
 
 PlayerStatus::PlayerStatus()
 {
-	PlayerHp = 10;
+	PlayerHp = 16;
 	PlayerMana = 0;
 	SubWeaponIndex = 0;
 	Score = 0;
@@ -28,7 +28,7 @@ PlayerStatus::PlayerStatus()
 
 void PlayerStatus::Renew()
 {
-	PlayerHp = 10;
+	PlayerHp = 16;
 	PlayerMana = 0;
 	SubWeaponIndex = 0;
 	Score = 0;

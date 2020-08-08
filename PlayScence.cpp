@@ -352,6 +352,8 @@ void CPlayScene::_ParseSection_OBJECTS_GRID(string line)
 				//step2->Stair = obj;
 				Grid::GetInstance()->InsertGridNode(step, gx, gy);
 				//Grid::GetInstance()->InsertGridNode(step2, gx, gy);
+				step->pos = 1;
+				//step2->pos = 2;
 			}
 			if (t == STAIRS_R2L) {
 				StairStep *step = new StairStep(r - haftW+5, b - hight, r + haftW +5, b);
@@ -591,7 +593,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		simon->SetSpeed(0, 0);
 		break;
 	case DIK_X:
-		simon->SetStatus(SIMON_STA_ATK);
+		//simon->SetStatus(SIMON_STA_ATK); set ở trong hàm atk của simon
 		if (CGame::GetInstance()->IsKeyDown(DIK_UP)) {
 			simon->subatk();
 		}else

@@ -21,12 +21,11 @@
 #include "Textures.h"
 
 #include "Brick.h"
-#include "Goomba.h"
 
 #include "PlayScence.h"
 
 #define WINDOW_CLASS_NAME L"SampleWindow"
-#define MAIN_WINDOW_TITLE L"SAMPLE 05 - SCENCE MANAGER"
+#define MAIN_WINDOW_TITLE L"CASTLE VANIA"
 
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(0, 0, 0)
 

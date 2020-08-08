@@ -11,7 +11,7 @@ HolyWater::HolyWater()
 	this->vy = 0;
 	this->vx = 0;
 	this->x = 0;
-	this->y = 0;
+	this->y = 800;
 	this->state = HOLY_STATE_IDLE;
 }
 
@@ -63,7 +63,7 @@ void HolyWater::Render()
 	bool islast = animation_set->at(ani)->Render(x, y);
 	if (islast && state==HOLY_STATE_DESTROY) {
 		this->x = 0;
-		this->y = 0;
+		this->y = 800;
 		this->vx = 0;
 		this->vy = 0;
 		state = HOLY_STATE_IDLE;

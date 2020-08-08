@@ -167,6 +167,7 @@
     <ClCompile Include="SkeletonBone.cpp" />
     <ClCompile Include="Stairs.cpp" />
     <ClCompile Include="StairStep.cpp" />
+    <ClCompile Include="StairStep2.cpp" />
     <ClCompile Include="StartScene.cpp" />
     <ClCompile Include="SubWeapon.cpp" />
     <ClCompile Include="TileMap.cpp" />
@@ -230,6 +231,7 @@
     <ClInclude Include="SkeletonBone.h" />
     <ClInclude Include="Stairs.h" />
     <ClInclude Include="StairStep.h" />
+    <ClInclude Include="StairStep2.h" />
     <ClInclude Include="StartScene.h" />
     <ClInclude Include="SubWeapon.h" />
     <ClInclude Include="TileMap.h" />

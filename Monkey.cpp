@@ -14,7 +14,6 @@ Monkey::Monkey()
 	state = MONKEY_STATE_IDLE;
 	curspeed = MONKEY_SPEED;
 	curhight = MONKEY_JUMP_SPEED;
-	jumpstate = 2;
 	timer = 0;
 	counter = 0;
 	jumpstate = 1;

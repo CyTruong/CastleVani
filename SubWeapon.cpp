@@ -13,6 +13,7 @@ SubWeapon::SubWeapon()
 	PlayerStatus::getInstance()->getSubWeaponIndex(weapon_type);
 	isready = true;
 	damage = 0;
+	delaytimer = 0;
 }
 
 void SubWeapon::SetWeaponType(int weapon_id)
@@ -56,14 +57,26 @@ void  SubWeapon::GetWeapon(LPGAMEOBJECT & weapon)
 
 void SubWeapon::Atk(float x, float y, float dir)
 {
-	
+	delaytimer = 0;
 	if (weapon_type!= SUB_WEAPON_NON && isready) {
-		isready = false;
-		this->effted = true;
-		this->weapon->SetPosition(x, y+5);
+		
+		if (dir > 0) {
+			tempoX = x+5;
+		}
+		else {
+			tempoX = x - 5;
+		}
+		tempoY = y + 5;
+		//this->weapon->SetPosition(x, y+5);
 		int mana = 0;
 		PlayerStatus::getInstance()->SubMana(1);
 		//Nếu ít mana ko cho play
+		/*if (mana <= 0) {
+			return;
+		}*/
+
+		isready = false;
+		this->effted = true;
 		if (weapon_type == SUB_WEAPON_DAGGER) {
 			if (dir < 0) {
 				this->weapon->vx = -0.3;
@@ -161,7 +174,13 @@ void SubWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				
 			}
 		}
-		weapon->Update(dt, coObjects);
+		delaytimer += dt;
+		if (delaytimer > 250) {
+			if (delaytimer < 280) {
+				weapon->SetPosition(tempoX, tempoY);
+			}
+			weapon->Update(dt, coObjects);
+		}
 
 	}
 	

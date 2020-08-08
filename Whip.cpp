@@ -13,6 +13,7 @@ Whip::Whip()
 	aniCount = 0;
 	isAtk = false;
 	level = 0;
+	cdtimer = 0;
 	PlayerStatus::getInstance()->getWhipsLevel(level);
 }
 
@@ -35,6 +36,7 @@ void Whip::setWhipLv(int lv) {
 }
 
 void Whip::atk(int dir) {
+		
 		lastFrameTime = GetTickCount();
 		aniCount = 0;
 		isAtk = true;

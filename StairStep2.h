@@ -8,20 +8,19 @@
 #define STAIRS_POS_BOT 1
 #define STAIRS_POS_TOP 2
 #define SIMON_HAFT_BBOX_WIDTH 8
-class StairStep :
+class StairStep2 :
 	public CGameObject
 {
 public:
 	LPGAMEOBJECT Stair;
-	int pos;
 public:
 	int width;
 	int height;
 public:
-	StairStep(float l, float t, float r, float b);
+	StairStep2(float l, float t, float r, float b);
 	virtual void Render();
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
 	virtual bool GetSimonVertex(float simonX, float simonY, float &vx, float &vy);
-	~StairStep();
+	~StairStep2();
 };
 

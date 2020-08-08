@@ -27,6 +27,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 	jumptimer += dt;
+	atkcdtimer += dt;
 	// Simple fall down
 	if (state != SIMON_STATE_CLIMP) {
 		vy += SIMON_GRAVITY * dt;
@@ -96,7 +97,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		else
 			if (cauthang->type == STAIRS_R2L) {
 				if (state != SIMON_STATE_CLIMP) {
-					if (((x > (cauthang->x + cauthang->width + STAIRS_BBOX_WIDTH)) || (x + SIMON_BIG_BBOX_WIDTH < (cauthang->x + cauthang->width))) && y > cauthang->y) { //ra khỏi chân cầu
+					DebugOut(L"Check ra khỏi cầu thang %f %f \n", x + SIMON_BIG_BBOX_WIDTH, cauthang->x + cauthang->width);
+					if (((x > (cauthang->x + cauthang->width + STAIRS_BBOX_WIDTH)) || (x + SIMON_BIG_BBOX_WIDTH < (cauthang->x + cauthang->width))) && y < cauthang->y) { //ra khỏi chân cầu
 						cauthang = NULL;
 						vy = 0;
 						DebugOut(L"Ra khỏi cầu thang 11\n");
@@ -384,35 +386,41 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 void CSimon::atk() {
 	DebugOut(L"atk x %f y %f \n",x,y);
-	if (!whip->isAtk) {
+	if (atkcdtimer> 800) {
+		SetStatus(SIMON_STA_ATK);
+		atkcdtimer = 0;
+		if (!whip->isAtk) {
 
-		if (vx == 0) {
-			if (nx > 0) {
-				whip->atk(WHIP_DIR_RIGHT);
+			if (vx == 0) {
+				if (nx > 0) {
+					whip->atk(WHIP_DIR_RIGHT);
+				}
+				else
+				{
+					whip->atk(WHIP_DIR_LEFT);
+				}
 			}
-			else
-			{
-				whip->atk(WHIP_DIR_LEFT);
+			else {
+				if (vx > 0) {
+					whip->atk(WHIP_DIR_RIGHT);
+				}
+				else
+				{
+					whip->atk(WHIP_DIR_LEFT);
+				}
+			}
+			/*whip->atk(WHIP_DIR_LEFT);*/
+			if (!isJump) {
+				vx = 0;
 			}
 		}
-		else {
-			if (vx > 0) {
-				whip->atk(WHIP_DIR_RIGHT);
-			}
-			else
-			{
-				whip->atk(WHIP_DIR_LEFT);
-			}
-		}
-		/*whip->atk(WHIP_DIR_LEFT);*/
-		if (!isJump) {
-			vx = 0;
-		}
+
 	}
 }
 
 void CSimon::subatk()
 {
+	SetStatus(SIMON_STA_ATK);
 	int id = 0;
 	subweapon->GetWeaponType(id);
 	if (id!=SUB_WEAPON_NON) {
