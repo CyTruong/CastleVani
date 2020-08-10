@@ -206,12 +206,11 @@ void IntroScence::Update(DWORD dt)
 	if (objects[1]->y < 400) {
 		timer += dt;
 		if (timer > 2000) {
-			CGame::GetInstance()->SwitchScene(1,true);
+				CGame::GetInstance()->SwitchScene(1,true);
 
 		}
 	}
 	objects[4]->x = objects[4]->x - 0.11;
-
 	objects[3]->x = objects[3]->x - 0.28;
 	objects[3]->y = objects[3]->y + 0.12;
 

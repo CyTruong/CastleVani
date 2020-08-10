@@ -6,6 +6,7 @@
 #include "Stairs.h"
 #include "PlayerStatus.h"
 #include "StairStep.h"
+#include "Effect.h"
 
 #define SIMON_WALKING_SPEED		0.05f  //0.05
 

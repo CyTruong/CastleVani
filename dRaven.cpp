@@ -75,6 +75,8 @@ void dRaven::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		x += dx;
 		y += dy;
 	}
+
+
 	if (state==OBJ_DIE) {
 		dirX = 0;
 		dirY = 0;
@@ -83,7 +85,7 @@ void dRaven::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void dRaven::Render()
 {
-	int ani;
+	int ani = 0;
 	if (state == dRAVEN_STATE_IDLE) {
 		if (dirX<0) {
 			ani = dRAVEN_ANI_IDLE_LEFT;

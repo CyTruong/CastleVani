@@ -59,24 +59,6 @@ void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			coEvents.clear();
 
-			if (!isJumping) {
-				counter++;			
-				//DebugOut(L"JUMP type %d \n", jumpstate);
-
-				if (counter % 2 == 0) {
-					if (jumpstate == 1) {
-						curhight = MONKEY_JUMP_SPEED2;
-						curspeed = MONKEY_SPEED2;
-						jumpstate = 2;
-					}
-					else {
-						curhight = MONKEY_JUMP_SPEED;
-						curspeed = MONKEY_SPEED;
-						jumpstate = 1;
-					}
-				}
-				isJumping = false;
-			}
 
 			// turn off collision when die 
 			if (state != OBJ_DIE)
@@ -120,6 +102,23 @@ void Monkey::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					timer += dt;
 					if (timer > 100) {
 						timer = 0;
+
+						counter++;
+						//DebugOut(L"JUMP type %d \n", jumpstate);
+
+						if (counter % 2 == 0) {
+							if (jumpstate == 1) {
+								curhight = MONKEY_JUMP_SPEED2;
+								curspeed = MONKEY_SPEED2;
+								jumpstate = 2;
+							}
+							else {
+								curhight = MONKEY_JUMP_SPEED;
+								curspeed = MONKEY_SPEED;
+								jumpstate = 1;
+							}
+						}
+
 						if (dir == -1) {
 							this->vx = -curspeed;
 						}

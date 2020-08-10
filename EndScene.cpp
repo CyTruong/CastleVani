@@ -261,7 +261,6 @@ void CEndScenceKeyHandler::OnKeyDown(int KeyCode)
 		((EndScene*)scence)->section = 2;
 		break;
 	case DIK_X:
-		
 		if (option==1) {
 			int scene;
 			PlayerStatus::getInstance()->getStateIndex(scene);

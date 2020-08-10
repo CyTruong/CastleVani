@@ -309,10 +309,22 @@ void CGame::SweptAABB(
 
 }
 
-void CGame::SetCamPos2(float x, float y,int mapW, int mapH)
+void CGame::SetCamPos2(float x, float y,int mapW, int mapH, bool issceneload)
 {
-	cam_x = x;
-	cam_y = y;
+	if (abs(cam_x - x )>1 && abs(cam_x - x) < 50) {
+		if (x < cam_x) {
+			cam_x = cam_x - 1;
+		}
+		else {
+			cam_x = cam_x + 1;
+		}
+	
+	}
+	else {
+		cam_x = x;
+		cam_y = y;
+	}
+	
 	if (cam_x <=0) {
 		cam_x = 0;
 	}

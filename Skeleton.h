@@ -1,10 +1,10 @@
 #pragma once
 #include "Enemy.h"
 
-#define SKELETON_SPEED 0.05f
+#define SKELETON_SPEED 0.06f
 
 #define SKELETON_GRAVITY 0.001f
-#define SKELETON_JUMP_SPEED 0.31f
+#define SKELETON_JUMP_SPEED 0.25f
 #define SKELETON_STATE_RUN 0
 
 #define SKELETON_BBOX_WIDTH 16

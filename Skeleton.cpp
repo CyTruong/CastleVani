@@ -95,14 +95,16 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 				FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
 
-				if ((rdy < 0 && rdx == 0 )  || (rdy == 0 && rdx > 0)) {
+				if ((rdy < 0 && rdx == 0 )  || (rdy == 0 && rdx > 0) ) {
 					x += vx * dt;
 					y += vy * dt;
 				}
 				else {
+
 					x += min_tx * dx + nx * 0.4f;
 					y += min_ty * dy + ny * 0.4f;
 
+					
 					allowjump = false;
 					jumping = false;
 					isblocked = false;
@@ -134,7 +136,7 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			//Chống lọt hố
 			float pointX = 0;
-			float pointY = y + SKELETON_BBOX_HEIGHT + 5;
+			float pointY = y + SKELETON_BBOX_HEIGHT + 2;
 			if (dir < 0) {
 				pointX = this->x - 5;
 			}
@@ -164,20 +166,18 @@ void Skeleton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				isblocked = false;
 				for (int i = 0; i < coObjects->size(); i++) {
 					LPGAMEOBJECT obj = coObjects->at(i);
-					if (obj->x < pointX && pointX < obj->x + 16) {
-						if (obj->y < pointY && pointY < obj->y + 16) {
-							isblocked = true;
-							break;
+					if (obj->collision_able==true) {
+						if (obj->x < pointX && pointX < obj->x + 16) {
+							if (obj->y < pointY && pointY < obj->y + 16) {
+								isblocked = true;
+								break;
+							}
 						}
 					}
-
 				}
 			}
 			
-			if (isblocked && !allowjump && !jumping) {
-				DebugOut(L"Brick vl  , xương nhảy lên %d \n", dt);
-				allowjump = false;
-			}
+			
 			if ((!havebrick ) && !allowjump && !jumping) {
 				DebugOut(L"Chống lọt hố , xương nhảy lên %d \n", dt);
 				allowjump = true;

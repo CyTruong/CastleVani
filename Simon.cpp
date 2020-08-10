@@ -126,7 +126,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				}
 			}
 	}
-	//Kiểm tra xem có ra khỏi  bước đệm ko
+	//Kiểm tra xem có ra khỏi  bước đệm ko	
 	if (demcauthang != NULL) {
 		float l, t, r, b;
 		demcauthang->GetBoundingBox(l, t, r, b);
@@ -363,6 +363,11 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					StartUntouchable();
 					vy = -SIMON_JUMP_SPEED_Y * 2 / 3;
 					PlayerStatus::getInstance()->SubHp(1);
+					if (dynamic_cast<dRaven* >(enemy->at(i))) {
+						enemy->at(i)->SetState(OBJ_DIE);
+						Effect::getInstance()->setDesEffect(true);
+						Effect::getInstance()->setDesEffect(enemy->at(i)->x + 5, enemy->at(i)->y + 5);
+					}
 				}		
 			}
 		}

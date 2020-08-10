@@ -1,4 +1,4 @@
-#include "Ghost.h"
+﻿#include "Ghost.h"
 #include "PlayerStatus.h"
 
 
@@ -6,6 +6,7 @@ Ghost::Ghost()
 {
 	dirX = 0;
 	dirY = 0;
+	mech = GHOST_MECH_1;
 }
 
 void Ghost::GetBoundingBox(float & left, float & top, float & right, float & bottom)
@@ -30,10 +31,19 @@ void Ghost::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 		}
 		else {
-			float vexX = player->x - this->x;
-			float vexY = player->y - this->y;
-			this->dirX = (this->dirX + vexX) / 2;
-			this->dirY = (this->dirY + vexY) / 2;
+			if (mech == GHOST_MECH_1) {
+				float vexX = player->x+5 - this->x;
+				float vexY = player->y+20 - this->y;
+				this->dirX = (this->dirX + vexX) / 2;
+				this->dirY = (this->dirY + vexY) / 2;
+			}
+			if (mech == GHOST_MECH_2) {
+				float vexX = tempX - this->x;
+				float vexY = tempY - this->y;
+				this->dirX = (this->dirX + vexX) / 2;
+				this->dirY = (this->dirY + vexY) / 2;
+			}
+			
 
 			if (dirX > 0) {
 				this->vx = GHOST_SPEED;
@@ -51,7 +61,23 @@ void Ghost::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					vy = GHOST_SPEED;
 				}
 			}
-			//DebugOut(L"Bat  x %f y %f \n",x,player->y);
+				
+			//kiểm tra xem đến lúc đổi mech chưa
+			if (mech == GHOST_MECH_1) {
+				float l, t, r, b;
+				player->GetBoundingBox(l, t, r, b);
+				if (CheckCollisionWith(l,t,r,b)) {
+					mech = GHOST_MECH_2;
+					int ran = rand() % 3 - 1;
+					tempX = this->x +  (20 * ran); // -20 +20 hoặc 0
+					tempY = this->y - 20;
+				}
+			}
+			if (mech == GHOST_MECH_2) {
+				if (abs(this->x - tempX)<2) {
+					mech = GHOST_MECH_1;
+				}
+			}
 		}
 		CGameObject::Update(dt, coObjects);
 		x += dx;

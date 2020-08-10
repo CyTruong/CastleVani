@@ -14,6 +14,7 @@ SubWeapon::SubWeapon()
 	isready = true;
 	damage = 0;
 	delaytimer = 0;
+	
 }
 
 void SubWeapon::SetWeaponType(int weapon_id)
@@ -43,6 +44,8 @@ void SubWeapon::SetWeaponType(int weapon_id)
 	default: 
 		break;
 	}
+	if(weapon!= NULL)
+	weapon->y = 800;
 }
 
 void SubWeapon::GetWeaponType(int & weapon_id)

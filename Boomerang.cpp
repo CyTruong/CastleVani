@@ -11,7 +11,7 @@ Boomerang::Boomerang()
 	this->SetAnimationSet(ani_set);
 	this->vy = 0;
 	this->vx = 0;
-	this->x = 0;
+	this->x = 800;
 	this->y = 800;
 	this->timetravel = 0;
 	this->isback = false;
@@ -49,8 +49,8 @@ void Boomerang::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (timetravel > 1000 ) {
 		timetravel = 0;
 		isback = false;
-		x = 0;
-		y = 1000;
+		x = 800;
+		y = 800;
 		vx = 0;
 		vy = 0;
 	}
